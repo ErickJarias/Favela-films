@@ -125,7 +125,7 @@ ul {
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0rem;
   font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: 0.05em;

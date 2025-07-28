@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://favelafilms.netlify.app/sitemap.xml

@@ -10,7 +10,7 @@
   <meta property="og:title" content="Favela Films - Arte, Cultura y Deporte">
   <meta property="og:description" content="Historias audiovisuales de arte urbano, fútbol y cultura desde las comunidades.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://favelafilms.netlify.app/">
+  <meta property="og:url" content="https://erickjarias.github.io/Favela-films/">
   <meta property="og:image" content="https://favelafilms.netlify.app/images/paginaFF.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Favela Films - Arte, Cultura y Deporte">
   <meta name="twitter:description" content="Historias audiovisuales desde las comunidades: arte, cultura y fútbol.">
-  <meta name="twitter:image" content="https://favelafilms.netlify.app/images/paginaFF.png">
+  <meta name="twitter:image" content="https://erickjarias.github.io/Favela-films/images/paginaFF.png">
 
 
 
@@ -30,24 +30,34 @@
   <link rel="icon" href="images/siluetablack.png" type="image/x-icon">
   <!-- MercadoPago SDK -->
   <script src="https://sdk.mercadopago.com/js/v2"></script>
-</head>
+
+   <!-- Google Analytics -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID"></script>
+   <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+     gtag('config', 'YOUR_GA_MEASUREMENT_ID');
+   </script>
+ </head>
 <body>
   <!-- Header -->
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <a href="#" class="logo">
+        <a href="#inicio" class="logo">
           <img src="images/siluetablack.png" alt="Favela Films Logo" class="logo-image">
           <span class="logo-text"><span class="favela-text" data-text="FAVELA">FAVELA</span> <span class="gold-text">films</span></span>
         </a>
         
         <nav class="desktop-nav">
-          <a href="#" class="nav-link active">Inicio</a>
-          <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
-          <a href="#historias" class="nav-link">Historias</a>
-          <a href="#productos" class="nav-link">Productos</a>
-          <a href="#contacto" class="nav-link">Contacto</a>
-        </nav>
+<a href="#inicio" class="nav-link active">Inicio</a>
+<a href="#audiovisuales" class="nav-link">Audiovisuales</a>
+<a href="#historias" class="nav-link">Historias</a>
+<a href="#productos" class="nav-link">Productos</a>
+<a href="#patrocinadores" class="nav-link">Patrocinadores</a>
+<a href="#contacto" class="nav-link">Contacto</a>
+</nav>
         
         <div class="header-actions">
           <button class="icon-button">
@@ -70,10 +80,11 @@
         <i class="fas fa-times"></i>
       </button>
       <nav class="mobile-nav">
-        <a href="#" class="nav-link active">Inicio</a>
-        <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
-        <a href="#historias" class="nav-link">Historias</a>
-        <a href="#productos" class="nav-link">Productos</a>
+      <a href="#inicio" class="nav-link active">Inicio</a>
+      <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
+      <a href="#historias" class="nav-link">Historias</a>
+      <a href="#productos" class="nav-link">Productos</a>
+      <a href="#patrocinadores" class="nav-link">Patrocinadores</a>
         <a href="#contacto" class="nav-link">Contacto</a>
       </nav>
     </div>
@@ -439,8 +450,40 @@
     </section>
   </main>
 
-  <!-- Section target for navigation -->
-  <div class="section-target" id="contacto"></div>
+  <!-- Patrocinadores Section -->
+  <section id="patrocinadores" class="section">
+     <div class="container">
+       <div class="section-target" id="patrocinadores-target"></div>
+       <h2 class="section-title text-center">Conviértete en Patrocinador</h2>
+       <p class="section-text text-center">Apoya nuestros proyectos audiovisuales sobre arte, deporte y cultura. Tu marca puede conectar con comunidades apasionadas y talentosas en Colombia.</p>
+       <div class="sponsorship-benefits">
+         <div class="benefit-item">
+           <h3>Beneficios de Patrocinio</h3>
+           <ul>
+             <li>Visibilidad en nuestros audiovisuales y redes sociales</li>
+             <li>Mención en eventos y proyecciones</li>
+             <li>Logo en sitio web y materiales promocionales</li>
+             <li>Oportunidades de colaboración directa con comunidades</li>
+           </ul>
+         </div>
+         <div class="benefit-item">
+           <h3>Niveles de Patrocinio</h3>
+           <ul>
+             <li><strong>Platino:</strong> Cobertura completa, eventos exclusivos</li>
+             <li><strong>Oro:</strong> Mención destacada en producciones</li>
+             <li><strong>Plata:</strong> Reconocimiento en redes y sitio</li>
+             <li><strong>Bronce:</strong> Apoyo básico con agradecimiento público</li>
+           </ul>
+         </div>
+       </div>
+       <div class="text-center">
+         <a href="https://wa.me/573115998002?text=Hola,%20estoy%20interesado%20en%20patrocinar%20sus%20proyectos%20en%20Favela%20Films" target="_blank" class="btn btn-black">Contáctanos por WhatsApp</a>
+       </div>
+     </div>
+   </section>
+
+   <!-- Section target for navigation -->
+   <div class="section-target" id="contacto"></div>
   
   <!-- Footer -->
   <footer class="footer">
@@ -457,9 +500,15 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
             </a>
             <a href="https://www.youtube.com/@filmsfavela" target="_blank" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
             </a>
-          </div>
+            </div>
+           <div class="share-buttons">
+             <p class="share-text">Comparte esta página:</p>
+             <a href="https://www.facebook.com/sharer/sharer.php?u=https://erickjarias.github.io/Favela-films/" target="_blank" class="share-link"><i class="fab fa-facebook-f"></i> Facebook</a>
+             <a href="https://twitter.com/intent/tweet?url=https://erickjarias.github.io/Favela-films/&text=Favela%20Films%20-%20Arte,%20cultura%20y%20deporte" target="_blank" class="share-link"><i class="fab fa-twitter"></i> Twitter</a>
+             <a href="https://wa.me/?text=https://erickjarias.github.io/Favela-films/" target="_blank" class="share-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+           </div>
         </div>
         
         <div class="footer-column">
@@ -488,18 +537,30 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
               <span>filmsfavela@gmail.com</span>
             </li>
-          </ul>
-        </div>
+            </ul>
+              <form class=\"contact-form\" action=\"https://formspree.io/f/your-form-id\" method=\"POST\">
+             <input type=\"text\" name=\"name\" placeholder=\"Tu nombre\" class=\"footer-input\" required>
+             <input type=\"email\" name=\"email\" placeholder=\"Tu email\" class=\"footer-input\" required>
+             <textarea name=\"message\" placeholder=\"Tu mensaje\" class=\"footer-textarea\" required></textarea>
+             <button type=\"submit\" class=\"btn btn-black footer-btn\">Enviar Mensaje</button>
+           </form>
+         </div>
         
         <div class="footer-column">
           <h3 class="footer-title">Boletín Informativo</h3>
           <p class="footer-text">Suscríbete para recibir las últimas noticias y ofertas exclusivas.</p>
           <form class="footer-form">
-            <input type="email" placeholder="Tu correo electrónico" class="footer-input">
-            <button type="submit" class="btn btn-black footer-btn">Suscribirse</button>
+          <input type="email" placeholder="Tu correo electrónico" class="footer-input">
+          <button type="submit" class="btn btn-black footer-btn">Suscribirse</button>
           </form>
-        </div>
-      </div>
+          </div>
+
+         <div class="footer-column">
+           <h3 class="footer-title">Patrocinadores</h3>
+           <p class="footer-text">¿Interesado en patrocinar nuestros proyectos? Contáctanos para oportunidades de colaboración.</p>
+           <a href="https://wa.me/573115998002?text=Hola,%20estoy%20interesado%20en%20patrocinar%20sus%20proyectos%20en%20Favela%20Films" target="_blank" class="btn btn-outline-black">Conviértete en Patrocinador</a>
+         </div>
+       </div>
       
       <div class="footer-bottom">
         <p>© 2025 Favela films. Todos los derechos reservados.</p>

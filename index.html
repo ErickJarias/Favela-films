@@ -28,6 +28,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="images/siluetablack.png" type="image/x-icon">
+  <!-- MercadoPago SDK -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
   <!-- Header -->
@@ -288,7 +290,47 @@
 
     <!-- Section target for navigation -->
     <div class="section-target" id="productos"></div>
-    
+
+    <!-- Search and Filters Section -->
+    <section class="search-filters bg-white">
+      <div class="container">
+        <div class="search-container">
+          <input type="text" id="product-search" class="search-input" placeholder="Buscar productos...">
+          <button id="search-btn" class="search-btn">Buscar</button>
+        </div>
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="category-filter">Categoría:</label>
+            <select id="category-filter" class="filter-select">
+              <option value="">Todas las categorías</option>
+              <option value="camiseta">Camisetas</option>
+              <option value="balon">Balones</option>
+              <option value="zapatillas">Zapatillas</option>
+              <option value="medias">Medias</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="price-filter">Precio:</label>
+            <select id="price-filter" class="filter-select">
+              <option value="">Todos los precios</option>
+              <option value="0-50000">Menos de $50.000</option>
+              <option value="50000-150000">$50.000 - $150.000</option>
+              <option value="150000+">Más de $150.000</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="sort-filter">Ordenar por:</label>
+            <select id="sort-filter" class="filter-select">
+              <option value="name">Nombre</option>
+              <option value="price-low">Precio: Menor a Mayor</option>
+              <option value="price-high">Precio: Mayor a Menor</option>
+              <option value="newest">Más recientes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Products Section -->
     <section class="section bg-white">
       <div class="container">
@@ -301,72 +343,80 @@
         </div>
         
         <div class="product-grid">
+        <div class="product-card">
+        <a href="producto.html?id=camiseta-oficial-seleccion-colombia" class="product-link">
+        <div class="product-image">
+          <img src="images/colombiashirt.png" alt="Camiseta Oficial Edición Especial">
+          <span class="product-badge">NUEVO</span>
+        <button class="wishlist-button" onclick="event.preventDefault(); event.stopPropagation();">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+            </button>
+          </div>
+        </a>
+        <div class="product-info">
+        <h3 class="product-title"><a href="producto.html?id=camiseta-oficial-seleccion-colombia">Camiseta Oficial Seleccion Colombia</a></h3>
+        <p class="product-price">COP 120.000</p>
+        <button class="btn btn-black">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+            Añadir al carrito
+            </button>
+             </div>
+           </div>
+          
           <div class="product-card">
-            <div class="product-image">
-              <img src="images/colombiashirt.png" alt="Camiseta Oficial Edición Especial">
-              <span class="product-badge">NUEVO</span>
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+          <a href="producto.html?id=balon-de-futbol-profesional" class="product-link">
+          <div class="product-image">
+            <img src="images/balon.jpg">
+          <button class="wishlist-button" onclick="event.preventDefault(); event.stopPropagation();">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               </button>
             </div>
-            <div class="product-info">
-              <h3 class="product-title">Camiseta Oficial Seleccion Colombia</h3>
-              <p class="product-price">COP 120.000</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
+          </a>
+          <div class="product-info">
+          <h3 class="product-title"><a href="producto.html?id=balon-de-futbol-profesional">Balón de Fútbol Profesional</a></h3>
+          <p class="product-price">COP 90.000</p>
+          <button class="btn btn-black">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+              Añadir al carrito
               </button>
             </div>
           </div>
           
           <div class="product-card">
-            <div class="product-image">
-              <img src="images/balon.jpg">
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+          <a href="producto.html?id=zapatillas-joma-premium" class="product-link">
+          <div class="product-image">
+            <img src="images/joma.jpg">
+            <span class="product-badge">NUEVO</span>
+          <button class="wishlist-button" onclick="event.preventDefault(); event.stopPropagation();">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               </button>
             </div>
-            <div class="product-info">
-              <h3 class="product-title">Balón de Fútbol Profesional</h3>
-              <p class="product-price">COP 90.000</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <div class="product-image">
-              <img src="images/joma.jpg">
-              <span class="product-badge">NUEVO</span>
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              </button>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Zapatillas JOMA Premium</h3>
-              <p class="product-price">COP 245.000</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
+          </a>
+          <div class="product-info">
+          <h3 class="product-title"><a href="producto.html?id=zapatillas-joma-premium">Zapatillas JOMA Premium</a></h3>
+          <p class="product-price">COP 245.000</p>
+          <button class="btn btn-black">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+              Añadir al carrito
               </button>
             </div>
           </div>
           
           <div class="product-card">
-            <div class="product-image">
-              <img src="images/medias.jpg" alt="DVD Colección Historias de Éxito">
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+          <a href="producto.html?id=medias-antideslizantes" class="product-link">
+          <div class="product-image">
+            <img src="images/medias.jpg" alt="DVD Colección Historias de Éxito">
+          <button class="wishlist-button" onclick="event.preventDefault(); event.stopPropagation();">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               </button>
             </div>
-            <div class="product-info">
-              <h3 class="product-title">Medias Antideslizantes</h3>
-              <p class="product-price">COP 20.000</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
+          </a>
+          <div class="product-info">
+          <h3 class="product-title"><a href="producto.html?id=medias-antideslizantes">Medias Antideslizantes</a></h3>
+          <p class="product-price">COP 20.000</p>
+          <button class="btn btn-black">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+              Añadir al carrito
               </button>
             </div>
           </div>

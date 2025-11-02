@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago Exitoso - Favela Films</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="images/siluetablack.png" type="image/x-icon">
+</head>
+<body>
+  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--color-black);">
+  <div style="text-align: center; padding: 40px; background: var(--color-gray); border-radius: var(--border-radius-large); box-shadow: var(--shadow-strong); max-width: 600px; width: 90%;">
+  <div style="color: var(--color-gold); font-size: 60px; margin-bottom: 20px;">
+  <i class="fas fa-check-circle"></i>
+  </div>
+  <h1 style="color: var(--color-gold); margin-bottom: 20px; text-shadow: 0 0 20px rgba(198, 164, 81, 0.5);">¡Pago Exitoso!</h1>
+  <p style="color: var(--color-white); margin-bottom: 30px; line-height: 1.6;">
+  Gracias por tu compra en Favela Films. Hemos recibido tu pago correctamente y estamos procesando tu pedido.
+  </p>
+
+  <div id="order-details" style="margin-bottom: 30px; display: none;">
+  <h3 style="color: var(--color-gold); margin-bottom: 15px;">Detalles del Pedido</h3>
+  <div style="background: var(--color-gray-dark); padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+  <div id="order-items"></div>
+  <div style="border-top: 1px solid rgba(198, 164, 81, 0.2); padding-top: 15px; margin-top: 15px;">
+    <div style="display: flex; justify-content: space-between; color: var(--color-white); margin-bottom: 10px;">
+        <span>Subtotal:</span>
+          <span id="order-subtotal"></span>
+        </div>
+      <div id="order-discount" style="display: flex; justify-content: space-between; color: var(--color-gold); margin-bottom: 10px; display: none;">
+        <span>Descuento:</span>
+          <span id="order-discount-amount"></span>
+          </div>
+            <div style="display: flex; justify-content: space-between; color: var(--color-white); font-weight: 600; font-size: 18px;">
+              <span>Total:</span>
+              <span id="order-total"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 30px;">
+        <h3 style="color: var(--color-gold); margin-bottom: 15px;">¿Qué sigue?</h3>
+        <ul style="text-align: left; color: var(--color-gray-lighter); line-height: 1.6; margin: 0 auto; max-width: 400px;">
+          <li>Recibirás confirmación por correo electrónico</li>
+          <li>Tu pedido será preparado en las próximas 24-48 horas</li>
+          <li>Te enviaremos actualizaciones sobre el envío</li>
+          <li>ID del pedido: <span id="order-id" style="color: var(--color-gold); font-weight: 500;"></span></li>
+        </ul>
+      </div>
+
+      <div>
+        <a href="/" class="btn btn-black" style="margin-right: 10px;">Volver al Inicio</a>
+        <a href="/#productos" class="btn btn-outline-black">Seguir Comprando</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Obtener parámetros de URL de MercadoPago
+    const urlParams = new URLSearchParams(window.location.search);
+    const preferenceId = urlParams.get('preference_id') || urlParams.get('external_reference');
+
+    if (preferenceId) {
+      // Cargar detalles del pedido
+      fetch(`/api/pedido/${preferenceId}`)
+        .then(response => response.json())
+        .then(pedido => {
+          if (pedido && !pedido.error) {
+            mostrarDetallesPedido(pedido);
+          }
+        })
+        .catch(error => console.log('Error cargando pedido:', error));
+    }
+
+    function mostrarDetallesPedido(pedido) {
+      const orderDetails = document.getElementById('order-details');
+      const orderItems = document.getElementById('order-items');
+      const orderSubtotal = document.getElementById('order-subtotal');
+      const orderDiscount = document.getElementById('order-discount');
+      const orderDiscountAmount = document.getElementById('order-discount-amount');
+      const orderTotal = document.getElementById('order-total');
+      const orderId = document.getElementById('order-id');
+
+      // Mostrar items
+      orderItems.innerHTML = pedido.items.map(item => `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(198, 164, 81, 0.1);">
+          <div style="text-align: left;">
+            <div style="color: var(--color-white); font-weight: 500;">${item.title}</div>
+            <div style="color: var(--color-gray-lighter); font-size: 14px;">Cantidad: ${item.quantity}</div>
+          </div>
+          <div style="color: var(--color-gold); font-weight: 500;">
+            COP ${(item.price * item.quantity).toLocaleString()}
+          </div>
+        </div>
+      `).join('');
+
+      // Calcular subtotal
+      const subtotal = pedido.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      orderSubtotal.textContent = `COP ${subtotal.toLocaleString()}`;
+
+      // Mostrar descuento si aplica
+      if (pedido.cupon) {
+        orderDiscount.style.display = 'flex';
+        const descuento = calcularDescuento(pedido);
+        orderDiscountAmount.textContent = `-COP ${descuento.toLocaleString()}`;
+      }
+
+      // Total
+      orderTotal.textContent = `COP ${pedido.total.toLocaleString()}`;
+      orderId.textContent = pedido.id.substring(0, 8).toUpperCase();
+
+      orderDetails.style.display = 'block';
+    }
+
+    function calcularDescuento(pedido) {
+      const subtotal = pedido.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      if (pedido.cupon === 'FAVELA10') return Math.round(subtotal * 0.1);
+      if (pedido.cupon === 'FUTBOL') return Math.round(subtotal * 0.15);
+      return 0;
+    }
+  </script>
+</body>
+</html>

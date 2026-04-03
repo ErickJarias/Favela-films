@@ -1,5 +1,16 @@
-// ===== RENDERER: carga datos desde Supabase y renderiza =====
+﻿// ===== RENDERER: carga datos desde Supabase y renderiza =====
 const _db = window._supabaseClient
+
+// Formato de precio según moneda configurada
+function formatPrice(value) {
+  const num = typeof value === 'number' ? value : parseFloat(String(value).replace(/[^\d.]/g, '')) || 0
+  const currency = document.documentElement.dataset.currency || 'COP'
+  if (currency === 'USD') {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(num)
+  }
+  // COP: formato colombiano sin decimales, punto como separador de miles
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(num)
+}
 
 const Renderer = (() => {
   const DEFAULT_LOGO = 'https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg'
@@ -105,7 +116,7 @@ const Renderer = (() => {
         </div>
         <div class="product-info">
           <h3 class="product-title">${p.name}</h3>
-          <p class="product-price">${p.price}</p>
+          <p class="product-price">${formatPrice(p.price)}</p>
           <button class="btn btn-black" onclick="Cart.add({img:'${safeImg}',name:'${safeTitle}',price:'${p.price}'})">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
             Añadir al carrito
@@ -185,12 +196,51 @@ const Renderer = (() => {
     if (config.body_bg) document.body.style.backgroundImage = `url('${config.body_bg}')`
   }
 
+  function renderBrands(brands) {
+    const track = document.getElementById('brandsTrack')
+    if (!track) return
+    if (!brands.length) {
+      track.parentElement.parentElement.style.display = 'none'
+      return
+    }
+    // Duplicar para efecto infinito (triplicamos para asegurar que no haya saltos)
+    const fullList = [...brands, ...brands, ...brands]
+    track.innerHTML = fullList.map(b => {
+      const imgHtml = `<img src="${b.logo_url || b.url}" alt="${b.name || 'Sponsor'}" loading="lazy" onerror="Utils.handleImageError(this)">`
+      return `
+        <div class="brand-item">
+          ${b.link_url 
+            ? `<a href="${b.link_url}" target="_blank" rel="noopener noreferrer">${imgHtml}</a>` 
+            : imgHtml}
+        </div>`
+    }).join('')
+    
+    // Ajustar duración de animación (más lenta para que se aprecie de 3 en 3)
+    const totalWidth = (200 + 96) * brands.length // 200px item + 6rem (96px) gap
+    track.style.setProperty('--scroll-dist', `-${totalWidth}px`)
+    track.style.animation = 'none'
+    track.offsetHeight // trigger reflow
+    track.style.animation = `scrollBrands ${brands.length * 8}s linear infinite`
+
+    // --- Control de pausa al hacer clic o tocar ---
+    track.addEventListener('click', () => {
+      track.classList.toggle('paused')
+    })
+
+    // Asegurar que si el mouse sale, se reanuda si no se hizo clic persistente
+    track.addEventListener('mouseleave', () => {
+      // Opcional: si quieres que el clic sea permanente, comenta la siguiente línea
+      track.classList.remove('paused')
+    })
+  }
+
   async function loadAll() {
-    const [videos, products, sliderRows, configRows] = await Promise.all([
+    const [videos, products, sliderRows, configRows, brands] = await Promise.all([
       fetchTable('videos'),
       fetchTable('products'),
-      fetchSlider(),          // ← usa fetchSlider en vez de fetchTable
-      fetchTable('site_config')
+      fetchSlider(),
+      fetchTable('site_config'),
+      fetchTable('brands').catch(() => []) // Intenta cargar tabla 'brands'
     ])
 
     const videosData = videos
@@ -213,8 +263,11 @@ const Renderer = (() => {
     renderVideos(videosData)
     renderStories(videosData)
     renderProducts(productsData)
+    renderBrands(brands || [])
     applyConfig(configData)
-    Slider.init(sliderData)
+    if (typeof Slider !== 'undefined' && Slider.init) {
+      Slider.init(sliderData)
+    }
   }
 
   return { loadAll, renderVideos, renderProducts, applyConfig }

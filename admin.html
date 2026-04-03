@@ -7,8 +7,10 @@
   <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
   <title>Admin — Fútea</title>
   <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="dark-admin.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/utils.js"></script>
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -81,6 +83,9 @@
         <button class="sidebar-item" data-section="videos">
           <i class="fas fa-video"></i> Videos
         </button>
+        <button class="sidebar-item" data-section="marcas">
+          <i class="fas fa-handshake"></i> Marcas
+        </button>
         <button class="sidebar-item" data-section="productos">
           <i class="fas fa-shopping-bag"></i> Productos
         </button>
@@ -108,6 +113,9 @@
         <button class="topbar-menu-btn" id="topbarMenuBtn"><i class="fas fa-bars"></i></button>
         <div class="topbar-title" id="topbarTitle">Carrusel</div>
         <div class="topbar-actions">
+          <button class="icon-button dark-toggle-btn" aria-label="Modo oscuro" title="Modo oscuro" style="color:#aaa">
+            <i class="fas fa-moon"></i>
+          </button>
           <a href="index.html" target="_blank" class="topbar-link"><i class="fas fa-external-link-alt"></i> Ver sitio</a>
         </div>
       </header>
@@ -228,48 +236,48 @@
 
         <!-- ===== VIDEOS ===== -->
         <section class="admin-section" id="section-videos">
+          <!-- ... existing content ... -->
+        </section>
+
+        <!-- ===== PATROCINADORES ===== -->
+        <section class="admin-section" id="section-marcas">
           <div class="section-head">
-            <h2><i class="fas fa-video"></i> Videos (YouTube, TikTok, Facebook y más)</h2>
-            <p>Añade videos con solo pegar la URL y define su categoría para filtros.</p>
+            <h2><i class="fas fa-handshake"></i> Patrocinadores</h2>
+            <p>Gestiona los logos de las marcas que apoyan la web. Se mostrarán en el carrusel infinito.</p>
           </div>
+
           <div class="card">
-            <div class="card-header"><h3>Añadir video</h3></div>
-            <div class="card-body fields-grid">
-              <div class="field-group">
-                <label>URL del video</label>
-                <input type="url" id="newVideoUrl" placeholder="https://youtube.com/... o https://tiktok.com/...">
+            <div class="card-header"><h3>Añadir patrocinador</h3></div>
+            <div class="card-body">
+              <div class="upload-zone upload-zone-sm" id="brandUploadZone">
+                <i class="fas fa-image"></i>
+                <p>Logo de la marca</p>
+                <input type="file" id="brandFileInput" accept="image/*" hidden>
               </div>
-              <div class="field-group">
-                <label>Título</label>
-                <input type="text" id="newVideoTitle" placeholder="Título del video">
+              <div id="brandImgPreview" class="img-preview" hidden>
+                <img id="brandImgPreviewImg" src="" alt="Preview">
+                <button class="btn-icon-danger" id="clearBrandImg"><i class="fas fa-times"></i></button>
               </div>
-              <div class="field-group">
-                <label>Duración</label>
-                <input type="text" id="newVideoDuration" placeholder="10:25">
-              </div>
-              <div class="field-group">
-                <label>Visualizaciones</label>
-                <input type="text" id="newVideoViews" placeholder="125K visualizaciones">
-              </div>
-              <div class="field-group">
-                <label>Categoría</label>
-                <select id="newVideoCategory">
-                  <option value="general">General</option>
-                  <option value="torneo">Torneo</option>
-                  <option value="historia">Historia</option>
-                  <option value="entrenamiento">Entrenamiento</option>
-                  <option value="entrevista">Entrevista</option>
-                </select>
+              <div class="fields-grid" style="margin-top:1rem">
+                <div class="field-group">
+                  <label>Nombre de la marca (opcional)</label>
+                  <input type="text" id="newBrandName" placeholder="Nike, Adidas, etc.">
+                </div>
+                <div class="field-group">
+                  <label>URL del sitio web (opcional)</label>
+                  <input type="url" id="newBrandUrl" placeholder="https://nike.com">
+                </div>
               </div>
             </div>
             <div class="card-footer">
-              <button class="btn-primary" id="btnAddVideo"><i class="fas fa-plus"></i> Añadir video</button>
+              <button class="btn-primary" id="btnAddBrand"><i class="fas fa-plus"></i> Añadir patrocinador</button>
             </div>
           </div>
+
           <div class="card">
-            <div class="card-header"><h3>Videos actuales <span class="badge" id="videosCount">0</span></h3></div>
+            <div class="card-header"><h3>Patrocinadores actuales <span class="badge" id="marcasCount">0</span></h3></div>
             <div class="card-body">
-              <div class="data-list" id="videosList">
+              <div class="data-list" id="marcasList">
                 <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
               </div>
             </div>
@@ -430,9 +438,11 @@
     </div><!-- /admin-main -->
   </div><!-- /adminDashboard -->
 
+  <script src="js/utils.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="admin/auth.js"></script>
   <script src="admin/cloudinary.js"></script>
   <script src="admin/editor.js"></script>
+  <script src="js/ui.js"></script>
 </body>
 </html>

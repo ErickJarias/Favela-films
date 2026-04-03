@@ -181,27 +181,54 @@ const Cart = (() => {
   function buildOrderMessage() {
     const items = getItems()
     const total = getTotal()
+    const isES = I18n.getLang() === 'es'
 
     const productLines = items.map((item, index) => {
-      const unitPrice = parsePrice(item.price)
+      const unitPrice = window.Utils ? Utils.parsePrice(item.price) : parseFloat(item.price) || 0
       const lineTotal = unitPrice * (item.qty || 1)
-      return `${index + 1}. ${item.name} x${item.qty || 1} - ${formatCOP(lineTotal)}`
+      const formattedTotal = window.Utils ? Utils.formatPrice(lineTotal) : `${lineTotal}`
+      
+      // Formato optimizado para que WhatsApp intente cargar la vista previa
+      return `✅ *${item.name}* (x${item.qty || 1})\nSubtotal: ${formattedTotal}\nVer producto: ${item.img}\n`
     })
 
+    if (!isES) {
+      const totalFormatted = window.Utils ? Utils.formatPrice(total) : `${total}`
+      return [
+        '🚀 *NEW ORDER FROM WEBSITE*',
+        '--------------------------',
+        ...productLines,
+        '--------------------------',
+        `💰 *TOTAL: ${totalFormatted}*`,
+        '',
+        '📝 *Customer Data:*',
+        '- Name:',
+        '- ID:',
+        '- Address:',
+        '- Neighborhood:',
+        '- City:',
+        '- Phone:',
+        '',
+        'Please wait for confirmation.'
+      ].join('\n')
+    }
+
     return [
-      'Hola, quiero realizar este pedido:',
-      '',
+      '🚀 *NUEVO PEDIDO DESDE LA WEB*',
+      '--------------------------',
       ...productLines,
+      '--------------------------',
+      `💰 *TOTAL: ${formatCOP(total)}*`,
       '',
-      `Total del pedido: ${formatCOP(total)}`,
-      '',
-      'Cliente, por favor rellena los datos a continuación:',
+      '📝 *Datos del Cliente:*',
       '- Nombre completo:',
       '- Cédula:',
-      '- Teléfono:',
-      '- Dirección / Barrio / Ciudad:',
-      '- Referencia de ubicación:',
-      '- Método de pago: ya te estaremos indicando.'
+      '- Dirección de envío:',
+      '- Barrio:',
+      '- Ciudad:',
+      '- Teléfono de contacto:',
+      '',
+      'Espera la confirmación para proceder con el pago.'
     ].join('\n')
   }
 

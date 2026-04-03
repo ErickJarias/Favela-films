@@ -16,13 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e) {
       const id = this.getAttribute('href')
-      if (id === '#') return
+      if (id === '#' || !id.startsWith('#')) return
+      
       const target = document.querySelector(id)
       if (target) {
         e.preventDefault()
-        window.scrollTo({ top: target.offsetTop, behavior: 'smooth' })
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight
+        
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        })
+        
+        // Update active class
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'))
         this.classList.add('active')
+        
+        // Close mobile menu if open
+        mobileMenu?.classList.remove('active')
       }
     })
   })

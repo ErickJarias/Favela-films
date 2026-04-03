@@ -148,6 +148,14 @@ function lightboxPrev() {
 // Exponer globalmente
 window.openLightbox = openLightbox
 
+// ── Inicialización ──
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof Renderer !== 'undefined') {
+    Renderer.loadAll()
+  }
+  loadExtraImages()
+})
+
 // ── Eventos ──
 document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox)
 document.getElementById('lightboxBackdrop')?.addEventListener('click', closeLightbox)

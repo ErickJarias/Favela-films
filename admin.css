@@ -769,3 +769,10 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-8
 .dest-toggle-mobile { border: 1.5px solid #c4b5fd !important; border-radius: 6px; padding: 0.2rem 0.5rem; }
 .dest-toggle-mobile span { color: #6366f1; font-weight: 500; }
 .dest-toggle-mobile input { accent-color: #6366f1; }
+
+/* Botón en modo edición */
+.btn-primary.btn-editing {
+  background: #d97706;
+  border-color: #d97706;
+}
+.btn-primary.btn-editing:hover { background: #b45309; }

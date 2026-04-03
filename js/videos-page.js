@@ -154,4 +154,9 @@ if (typeof Slider === 'undefined') {
   window.Slider = { pause: () => {}, resume: () => {} }
 }
 
-document.addEventListener('DOMContentLoaded', loadVideos)
+document.addEventListener('DOMContentLoaded', async () => {
+  if (typeof Renderer !== 'undefined') {
+    Renderer.loadAll()
+  }
+  await loadVideos()
+})

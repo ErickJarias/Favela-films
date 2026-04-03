@@ -86,18 +86,95 @@ ul { list-style: none; }
 .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 .nav-link:hover { color: var(--color-gold); }
 
-.header-actions { display: flex; align-items: center; gap: 1rem; z-index: 101; }
-.icon-button { background: none; border: none; cursor: pointer; color: var(--color-black); transition: color 0.2s; }
+.header-actions { display: flex; align-items: center; gap: 0.5rem; z-index: 101; }
+.icon-button { background: none; border: none; cursor: pointer; color: var(--color-black); transition: color 0.2s; padding: 0.4rem; display: flex; align-items: center; justify-content: center; }
 .icon-button:hover { color: var(--color-gold); }
 .cart-icon { position: relative; }
-.cart-count { position: absolute; top: -0.5rem; right: -0.5rem; background-color: var(--color-black); color: var(--color-white); font-size: 0.75rem; width: 1.25rem; height: 1.25rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.mobile-menu-button { display: block; background: none; border: none; cursor: pointer; z-index: 101; }
-.admin-lock-button { background: none; border: none; cursor: pointer; color: var(--color-black); font-size: 1rem; display: flex; align-items: center; transition: color 0.2s; }
-.admin-lock-button:hover { color: var(--color-gold); }
+.cart-count { position: absolute; top: 0; right: 0; background-color: var(--color-black); color: var(--color-white); font-size: 0.65rem; width: 1.1rem; height: 1.1rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: translate(25%, -25%); }
+.mobile-menu-button { display: block; background: none; border: none; cursor: pointer; z-index: 101; padding: 0.4rem; color: var(--color-black); }
+.admin-lock-button { background: none; border: none; cursor: pointer; color: var(--color-black); font-size: 1rem; display: flex; align-items: center; transition: color 0.2s; padding: 0.4rem; }
 
-.mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--color-white); z-index: 100; transform: translateX(-100%); transition: transform 0.3s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--color-white); z-index: 200; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .mobile-menu.active { transform: translateX(0); }
-.mobile-nav { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+.close-menu { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-black); padding: 0.5rem; }
+.mobile-nav { display: flex; flex-direction: column; align-items: center; gap: 2rem; width: 100%; }
+
+/* ===== BRANDS SLIDER ===== */
+.brands-section { padding: 4rem 0; overflow: hidden; background: #fff; }
+.brands-slider { width: 100%; overflow: hidden; padding: 2rem 0; position: relative; }
+.brands-slider::before, .brands-slider::after {
+  content: ""; height: 100%; width: 100px; position: absolute; z-index: 2;
+  pointer-events: none;
+}
+.brands-slider::before { left: 0; background: linear-gradient(to right, white, transparent); }
+.brands-slider::after { right: 0; background: linear-gradient(to left, white, transparent); }
+
+.brands-track {
+  display: flex; gap: 6rem; width: max-content;
+  animation: scrollBrands 20s linear infinite;
+  align-items: center;
+  padding: 0 4rem;
+}
+.brands-slider:hover .brands-track,
+.brands-track.paused {
+  animation-play-state: paused !important;
+}
+.brand-item { display: flex; align-items: center; justify-content: center; width: 200px; flex-shrink: 0; cursor: pointer; }
+.brand-item img {
+  max-width: 100%; height: auto; filter: grayscale(100%); opacity: 0.6;
+  transition: all 0.3s ease;
+  max-height: 80px; object-fit: contain;
+}
+.brand-item:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+
+@keyframes scrollBrands {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-200px * 5 - 6rem * 5)); } /* Ajustar según número de marcas */
+}
+
+/* Dark mode adjustment */
+.dark .brands-section { background: #111; }
+.dark .brands-slider::before { background: linear-gradient(to right, #111, transparent); }
+.dark .brands-slider::after { background: linear-gradient(to left, #111, transparent); }
+.dark .brand-item img { filter: grayscale(100%) invert(1); opacity: 0.5; }
+.dark .brand-item:hover img { filter: grayscale(0%) invert(0); opacity: 1; }
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast-item {
+  background: #333;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-width: 250px;
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  pointer-events: auto;
+}
+.toast-item.show { transform: translateX(0); }
+.toast-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.toast-close:hover { color: #fff; }
+.dark .toast-item { background: #eee; color: #111; }
 .mobile-nav .nav-link { font-size: 1.25rem; }
 .mobile-admin-link {
   background: none;
@@ -610,3 +687,31 @@ ul { list-style: none; }
 }
 .admin-login-btn:hover { background: #222; }
 .admin-login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ===== BOTONES UI (dark/lang) ===== */
+.lang-toggle-btn {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  border: 1.5px solid currentColor;
+  line-height: 1.4;
+  min-width: 28px;
+  background: none;
+  cursor: pointer;
+  color: var(--color-black);
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+.lang-toggle-btn:hover { background: var(--color-gold); color: var(--color-white); border-color: var(--color-gold); }
+
+/* Botones UI en menú móvil */
+.mobile-ui-btns {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-gray-light);
+}

@@ -150,6 +150,7 @@ const Editor = (() => {
   async function loadSection(section) {
     if (section === 'slider') await loadSlider()
     if (section === 'videos') await loadVideos()
+    if (section === 'marcas') await loadMarcas()
     if (section === 'productos') await loadProductos()
     if (section === 'textos' || section === 'contacto' || section === 'tema') await loadConfig()
   }
@@ -373,32 +374,39 @@ const Editor = (() => {
     const normalized = normalizeVideoInput(input)
     if (!normalized) { toast('La URL del video no es válida', 'error'); return }
 
+    // Modo edición
+    if (editingVideoId) {
+      const { error } = await _db.from('videos').update({ title, duration, views }).eq('id', editingVideoId)
+      if (error) { toast('Error al actualizar video', 'error'); return }
+
+      const meta = await loadVideoMeta()
+      meta[editingVideoId] = {
+        url: normalized.url,
+        platform: normalized.platform,
+        category,
+        thumbnail: normalized.thumbnail
+      }
+      await saveVideoMeta(meta)
+      toast('Video actualizado')
+      cancelVideoEdit()
+      loadVideos()
+      return
+    }
+
+    // Modo añadir
     const { data: existing } = await _db.from('videos').select('order_index').order('order_index', { ascending: false }).limit(1)
     const nextOrder = existing?.length ? existing[0].order_index + 1 : 0
 
     const { error } = await _db.from('videos').insert({
-      id: normalized.rowId,
-      title,
-      duration,
-      views,
-      order_index: nextOrder
+      id: normalized.rowId, title, duration, views, order_index: nextOrder
     })
     if (error) {
-      if (error.message?.toLowerCase().includes('duplicate')) {
-        toast('Ese video ya existe. Usa otro URL.', 'error')
-      } else {
-        toast('Error al guardar video', 'error')
-      }
+      toast(error.message?.toLowerCase().includes('duplicate') ? 'Ese video ya existe.' : 'Error al guardar video', 'error')
       return
     }
 
     const meta = await loadVideoMeta()
-    meta[normalized.rowId] = {
-      url: normalized.url,
-      platform: normalized.platform,
-      category,
-      thumbnail: normalized.thumbnail
-    }
+    meta[normalized.rowId] = { url: normalized.url, platform: normalized.platform, category, thumbnail: normalized.thumbnail }
     await saveVideoMeta(meta)
 
     toast('Video añadido')
@@ -417,42 +425,51 @@ const Editor = (() => {
     const meta = await loadVideoMeta()
     const currentMeta = meta[id] || {}
 
-    const currentUrl = currentMeta.url || `https://www.youtube.com/watch?v=${id}`
-    const newUrl = prompt('URL del video:', currentUrl)
-    if (newUrl === null) return
-    const normalized = normalizeVideoInput(newUrl.trim())
-    if (!normalized) { toast('URL inválida', 'error'); return }
+    editingVideoId = id
 
-    const newTitle = prompt('Título:', data.title)
-    if (newTitle === null || !newTitle.trim()) return
+    // Cargar datos en el formulario
+    document.getElementById('newVideoId').value = currentMeta.url || `https://www.youtube.com/watch?v=${id}`
+    document.getElementById('newVideoTitle').value = data.title || ''
+    document.getElementById('newVideoDuration').value = data.duration || ''
+    document.getElementById('newVideoViews').value = data.views || ''
+    document.getElementById('newVideoCategory').value = currentMeta.category || 'general'
 
-    const newDuration = prompt('Duración (ej: 10:25):', data.duration || '0:00')
-    if (newDuration === null) return
-
-    const newViews = prompt('Visualizaciones:', data.views || '0 visualizaciones')
-    if (newViews === null) return
-
-    const newCategory = prompt('Categoría (torneo, historia, entrenamiento, entrevista, general):', currentMeta.category || 'general')
-    if (newCategory === null) return
-
-    const { error: updateError } = await _db.from('videos').update({
-      title: newTitle.trim(),
-      duration: newDuration.trim() || '0:00',
-      views: newViews.trim() || '0 visualizaciones'
-    }).eq('id', id)
-
-    if (updateError) { toast('Error al actualizar video', 'error'); return }
-
-    meta[id] = {
-      url: normalized.url,
-      platform: normalized.platform,
-      category: (newCategory || 'general').trim().toLowerCase(),
-      thumbnail: normalized.thumbnail
+    // Cambiar botón a "Actualizar"
+    const btnAdd = document.getElementById('btnAddVideo')
+    if (btnAdd) {
+      btnAdd.innerHTML = '<i class="fas fa-save"></i> Actualizar video'
+      btnAdd.classList.add('btn-editing')
     }
-    await saveVideoMeta(meta)
 
-    toast('Video actualizado')
-    loadVideos()
+    // Botón cancelar
+    let cancelBtn = document.getElementById('btnCancelVideoEdit')
+    if (!cancelBtn) {
+      cancelBtn = document.createElement('button')
+      cancelBtn.id = 'btnCancelVideoEdit'
+      cancelBtn.className = 'btn-secondary'
+      cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancelar'
+      cancelBtn.addEventListener('click', cancelVideoEdit)
+      btnAdd.parentNode.insertBefore(cancelBtn, btnAdd.nextSibling)
+    }
+    cancelBtn.hidden = false
+
+    document.getElementById('section-videos')?.querySelector('.card')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    toast('Editando: ' + data.title)
+  }
+
+  function cancelVideoEdit() {
+    editingVideoId = null
+    document.getElementById('newVideoId').value = ''
+    document.getElementById('newVideoTitle').value = ''
+    document.getElementById('newVideoDuration').value = ''
+    document.getElementById('newVideoViews').value = ''
+    const btnAdd = document.getElementById('btnAddVideo')
+    if (btnAdd) {
+      btnAdd.innerHTML = '<i class="fas fa-plus"></i> Añadir video'
+      btnAdd.classList.remove('btn-editing')
+    }
+    const cancelBtn = document.getElementById('btnCancelVideoEdit')
+    if (cancelBtn) cancelBtn.hidden = true
   }
 
   async function deleteVideo(id) {
@@ -468,6 +485,80 @@ const Editor = (() => {
 
     toast('Video eliminado')
     loadVideos()
+  }
+
+  // --- MARCAS (Patrocinadores) ---
+  let pendingBrandImg = ''
+
+  async function loadMarcas() {
+    const list = document.getElementById('marcasList')
+    const count = document.getElementById('marcasCount')
+    if (!list) return
+    list.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i></div>'
+
+    const { data, error } = await _db.from('brands').select('*').order('order_index')
+    if (error) { list.innerHTML = '<p class="error-state">Error al cargar marcas</p>'; return }
+
+    count.textContent = data.length
+    if (!data.length) { list.innerHTML = '<p class="empty-state">No hay patrocinadores añadidos.</p>'; return }
+
+    list.innerHTML = data.map((b, i) => `
+      <div class="data-item">
+        <img src="${b.url}" alt="${b.name || 'Brand'}">
+        <div class="data-item-info">
+          <strong>${b.name || 'Sin nombre'}</strong>
+          <span>Posición: ${i + 1}</span>
+        </div>
+        <div class="data-item-actions">
+          ${i > 0 ? `<button class="btn-icon" onclick="Editor.moveMarca(${b.id}, -1)" title="Subir"><i class="fas fa-arrow-up"></i></button>` : ''}
+          ${i < data.length - 1 ? `<button class="btn-icon" onclick="Editor.moveMarca(${b.id}, 1)" title="Bajar"><i class="fas fa-arrow-down"></i></button>` : ''}
+          <button class="btn-icon btn-icon-danger" onclick="Editor.deleteMarca(${b.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`).join('')
+  }
+
+  async function addMarca() {
+    const name = document.getElementById('newBrandName').value.trim()
+    const linkUrl = document.getElementById('newBrandUrl').value.trim()
+    if (!pendingBrandImg) { toast('El logo de la marca es obligatorio', 'error'); return }
+
+    const { data: existing } = await _db.from('brands').select('order_index').order('order_index', { ascending: false }).limit(1)
+    const nextOrder = existing?.length ? existing[0].order_index + 1 : 0
+
+    const { error } = await _db.from('brands').insert({
+      url: pendingBrandImg,
+      name: name || '',
+      link_url: linkUrl || '',
+      order_index: nextOrder
+    })
+    if (error) { toast('Error al guardar patrocinador', 'error'); return }
+
+    toast('Patrocinador añadido')
+    pendingBrandImg = ''
+    document.getElementById('brandImgPreview').hidden = true
+    document.getElementById('newBrandName').value = ''
+    document.getElementById('newBrandUrl').value = ''
+    loadMarcas()
+  }
+
+  async function deleteMarca(id) {
+    if (!confirm('¿Eliminar este patrocinador?')) return
+    const { error } = await _db.from('brands').delete().eq('id', id)
+    if (error) { toast('Error al eliminar patrocinador', 'error'); return }
+    toast('Patrocinador eliminado')
+    loadMarcas()
+  }
+
+  async function moveMarca(id, dir) {
+    const { data } = await _db.from('brands').select('*').order('order_index')
+    const idx = data.findIndex(r => r.id === id)
+    const swapIdx = idx + dir
+    if (swapIdx < 0 || swapIdx >= data.length) return
+
+    const a = data[idx], b = data[swapIdx]
+    await _db.from('brands').update({ order_index: b.order_index }).eq('id', a.id)
+    await _db.from('brands').update({ order_index: a.order_index }).eq('id', b.id)
+    loadMarcas()
   }
 
   // --- PRODUCTOS ---
@@ -502,9 +593,21 @@ const Editor = (() => {
     const badge = document.getElementById('newProductBadge').value.trim()
     if (!name || !price || !pendingProductImg) { toast('Imagen, nombre y precio son obligatorios', 'error'); return }
 
+    // Modo edición
+    if (editingProductId) {
+      const { error } = await _db.from('products').update({
+        name, price, badge, img: pendingProductImg
+      }).eq('id', editingProductId)
+      if (error) { toast('Error al actualizar producto', 'error'); return }
+      toast('Producto actualizado')
+      cancelProductEdit()
+      loadProductos()
+      return
+    }
+
+    // Modo añadir
     const { data: existing } = await _db.from('products').select('order_index').order('order_index', { ascending: false }).limit(1)
     const nextOrder = existing?.length ? existing[0].order_index + 1 : 0
-
     const { error } = await _db.from('products').insert({ img: pendingProductImg, name, price, badge, order_index: nextOrder })
     if (error) { toast('Error al guardar producto', 'error'); return }
 
@@ -517,34 +620,67 @@ const Editor = (() => {
     loadProductos()
   }
 
+  // ID del item que se está editando actualmente
+  let editingProductId = null
+  let editingVideoId = null
+
   async function editProduct(id) {
     const { data, error } = await _db.from('products').select('*').eq('id', id).maybeSingle()
     if (error || !data) { toast('No se pudo cargar el producto', 'error'); return }
 
-    const newName = prompt('Nombre del producto:', data.name || '')
-    if (newName === null || !newName.trim()) return
+    // Cargar datos en el formulario
+    editingProductId = id
+    document.getElementById('newProductName').value = data.name || ''
+    document.getElementById('newProductPrice').value = data.price || ''
+    document.getElementById('newProductBadge').value = data.badge || ''
 
-    const newPrice = prompt('Precio:', data.price || '')
-    if (newPrice === null || !newPrice.trim()) return
+    // Mostrar preview de imagen actual
+    pendingProductImg = data.img || ''
+    const preview = document.getElementById('productImgPreview')
+    const previewImg = document.getElementById('productImgPreviewImg')
+    if (pendingProductImg && preview && previewImg) {
+      previewImg.src = pendingProductImg
+      preview.hidden = false
+    }
 
-    const newBadge = prompt('Badge (opcional):', data.badge || '')
-    if (newBadge === null) return
+    // Cambiar botón a "Actualizar" y mostrar botón cancelar
+    const btnAdd = document.getElementById('btnAddProduct')
+    if (btnAdd) {
+      btnAdd.innerHTML = '<i class="fas fa-save"></i> Actualizar producto'
+      btnAdd.classList.add('btn-editing')
+    }
 
-    const newImg = prompt('URL de la imagen del producto:', data.img || '')
-    if (newImg === null || !newImg.trim()) return
-    if (!isValidHttpUrl(newImg.trim())) { toast('URL de imagen inválida', 'error'); return }
+    // Mostrar botón cancelar edición
+    let cancelBtn = document.getElementById('btnCancelProductEdit')
+    if (!cancelBtn) {
+      cancelBtn = document.createElement('button')
+      cancelBtn.id = 'btnCancelProductEdit'
+      cancelBtn.className = 'btn-secondary'
+      cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancelar'
+      cancelBtn.addEventListener('click', cancelProductEdit)
+      btnAdd.parentNode.insertBefore(cancelBtn, btnAdd.nextSibling)
+    }
+    cancelBtn.hidden = false
 
-    const { error: updateError } = await _db.from('products').update({
-      name: newName.trim(),
-      price: newPrice.trim(),
-      badge: newBadge.trim(),
-      img: newImg.trim()
-    }).eq('id', id)
+    // Scroll al formulario
+    document.getElementById('section-productos')?.querySelector('.card')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    toast('Editando: ' + data.name)
+  }
 
-    if (updateError) { toast('Error al actualizar producto', 'error'); return }
-
-    toast('Producto actualizado')
-    loadProductos()
+  function cancelProductEdit() {
+    editingProductId = null
+    pendingProductImg = ''
+    document.getElementById('newProductName').value = ''
+    document.getElementById('newProductPrice').value = ''
+    document.getElementById('newProductBadge').value = ''
+    document.getElementById('productImgPreview').hidden = true
+    const btnAdd = document.getElementById('btnAddProduct')
+    if (btnAdd) {
+      btnAdd.innerHTML = '<i class="fas fa-plus"></i> Añadir producto'
+      btnAdd.classList.remove('btn-editing')
+    }
+    const cancelBtn = document.getElementById('btnCancelProductEdit')
+    if (cancelBtn) cancelBtn.hidden = true
   }
 
   async function deleteProduct(id) {
@@ -725,6 +861,27 @@ const Editor = (() => {
     // Videos
     document.getElementById('btnAddVideo')?.addEventListener('click', addVideo)
 
+    // Marcas: upload Cloudinary
+    Cloudinary.setupDropZone('brandUploadZone', 'brandFileInput', async (file) => {
+      try {
+        const url = await Cloudinary.upload(file, 'futea/brands', null)
+        pendingBrandImg = url
+        const preview = document.getElementById('brandImgPreview')
+        document.getElementById('brandImgPreviewImg').src = url
+        preview.hidden = false
+      } catch (e) {
+        console.error('Cloudinary brand upload error', e)
+        toast('Error al subir logo: ' + e.message, 'error')
+      }
+    })
+
+    document.getElementById('clearBrandImg')?.addEventListener('click', () => {
+      pendingBrandImg = ''
+      document.getElementById('brandImgPreview').hidden = true
+    })
+
+    document.getElementById('btnAddBrand')?.addEventListener('click', addMarca)
+
     // Productos: upload Cloudinary
     Cloudinary.setupDropZone('productUploadZone', 'productFileInput', async (file) => {
       try {
@@ -822,5 +979,5 @@ const Editor = (() => {
     })
   }
 
-  return { init, deleteSlider, moveSlider, toggleDest, uploadMobile, removeMobile, deleteVideo, editVideo, deleteProduct, editProduct }
+  return { init, deleteSlider, moveSlider, toggleDest, uploadMobile, removeMobile, deleteVideo, editVideo, deleteMarca, moveMarca, deleteProduct, editProduct }
 })()

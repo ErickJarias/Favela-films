@@ -18,11 +18,13 @@
   <meta name="twitter:description" content="Explora todos los videos de Futea.">
   <meta name="twitter:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
   <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
-  <title>Audiovisuales — Fútea</title>
+  <title data-i18n="videos.title">Audiovisuales — Fútea</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="pages.css">
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dark.css">
+  <script src="js/utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
@@ -36,13 +38,15 @@
           <span class="logo-text"><span class="favela-text" data-text="FUTEA">FÚTEA</span></span>
         </a>
         <nav class="desktop-nav">
-          <a href="index.html" class="nav-link">Inicio</a>
-          <a href="videos.html" class="nav-link active">Audiovisuales</a>
-          <a href="index.html#historias" class="nav-link">Historias</a>
-          <a href="productos.html" class="nav-link">Productos</a>
-          <a href="index.html#contacto" class="nav-link">Contacto</a>
+          <a href="index.html" class="nav-link" data-i18n="nav.inicio">Inicio</a>
+          <a href="videos.html" class="nav-link active" data-i18n="nav.audiovisuales">Audiovisuales</a>
+          <a href="index.html#historias" class="nav-link" data-i18n="nav.historias">Historias</a>
+          <a href="productos.html" class="nav-link" data-i18n="nav.productos">Productos</a>
+          <a href="index.html#contacto" class="nav-link" data-i18n="nav.contacto">Contacto</a>
         </nav>
         <div class="header-actions">
+          <button class="icon-button dark-toggle-btn" aria-label="Modo oscuro" title="Modo oscuro"><i class="fas fa-moon"></i></button>
+          <button class="icon-button lang-toggle-btn" title="Switch to English">ES</button>
           <button class="icon-button" id="searchBtn" aria-label="Buscar">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           </button>
@@ -58,12 +62,16 @@
         <div class="mobile-menu">
       <button class="close-menu" aria-label="Cerrar menu"><i class="fas fa-times"></i></button>
       <nav class="mobile-nav">
-        <a href="index.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Inicio</a>
-        <a href="galeria.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Galería</a>
-        <a href="videos.html" class="nav-link active" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Audiovisuales</a>
-        <a href="index.html#historias" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Historias</a>
-        <a href="productos.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Productos</a>
-        <a href="index.html#contacto" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Contacto</a>
+        <a href="index.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.inicio">Inicio</a>
+        <a href="galeria.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.galeria">Galería</a>
+        <a href="videos.html" class="nav-link active" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.audiovisuales">Audiovisuales</a>
+        <a href="index.html#historias" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.historias">Historias</a>
+        <a href="productos.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.productos">Productos</a>
+        <a href="index.html#contacto" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.contacto">Contacto</a>
+              <div class="mobile-ui-btns">
+          <button class="icon-button dark-toggle-btn" aria-label="Modo oscuro"><i class="fas fa-moon"></i></button>
+          <button class="icon-button lang-toggle-btn">ES</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -75,15 +83,15 @@
       <button class="admin-login-close" id="adminLoginClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
       <div class="admin-login-logo">
         <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Fútea">
-        <div><h2>Panel Admin</h2><span>Acceso restringido</span></div>
+        <div><h2 data-i18n="admin.title">Panel Admin</h2><span data-i18n="admin.restricted">Acceso restringido</span></div>
       </div>
       <form id="adminLoginForm" class="admin-login-form">
         <div class="admin-login-field">
-          <label for="modalEmail"><i class="fas fa-envelope"></i> Correo</label>
+          <label for="modalEmail"><i class="fas fa-envelope"></i> <span data-i18n="admin.email">Correo</span></label>
           <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
         </div>
         <div class="admin-login-field">
-          <label for="modalPassword"><i class="fas fa-lock"></i> Contraseña</label>
+          <label for="modalPassword"><i class="fas fa-lock"></i> <span data-i18n="admin.password">Contraseña</span></label>
           <div class="modal-pass-wrap">
             <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" id="modalTogglePass" aria-label="Ver contraseña"><i class="fas fa-eye"></i></button>
@@ -91,7 +99,7 @@
         </div>
         <div id="modalLoginError" class="admin-login-error" hidden></div>
         <button type="submit" class="admin-login-btn" id="modalLoginBtn">
-          <span id="modalLoginBtnText">Ingresar al panel</span>
+          <span id="modalLoginBtnText" data-i18n="admin.login">Ingresar al panel</span>
           <i class="fas fa-spinner fa-spin" id="modalLoginSpinner" hidden></i>
         </button>
       </form>
@@ -104,8 +112,8 @@
       <div class="container">
         <nav class="breadcrumb">
         </nav>
-        <h1 class="page-hero-title">Audiovisuales</h1>
-        <p class="page-hero-subtitle">Toda nuestra producción audiovisual en un solo lugar</p>
+        <h1 class="page-hero-title" data-i18n="videos.title">Audiovisuales</h1>
+        <p class="page-hero-subtitle" data-i18n="videos.subtitle">Toda nuestra producción audiovisual en un solo lugar</p>
       </div>
     </div>
 
@@ -115,14 +123,14 @@
         <div class="page-toolbar">
           <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" id="videoSearch" placeholder="Buscar videos..." autocomplete="off">
+            <input type="text" id="videoSearch" data-i18n="videos.search" placeholder="Buscar videos..." autocomplete="off">
             <button id="clearSearch" hidden aria-label="Limpiar"><i class="fas fa-times"></i></button>
           </div>
           <div class="filter-chips" id="filterChips">
-            <button class="chip active" data-filter="all">Todos</button>
-            <button class="chip" data-filter="torneo">Torneos</button>
-            <button class="chip" data-filter="historia">Historias</button>
-            <button class="chip" data-filter="entrenamiento">Entrenamiento</button>
+            <button class="chip active" data-filter="all" data-i18n="videos.filter.all">Todos</button>
+            <button class="chip" data-filter="torneo" data-i18n="videos.filter.torneo">Torneos</button>
+            <button class="chip" data-filter="historia" data-i18n="videos.filter.historia">Historias</button>
+            <button class="chip" data-filter="entrenamiento" data-i18n="videos.filter.entrenamiento">Entrenamiento</button>
           </div>
         </div>
 
@@ -133,15 +141,15 @@
         <div class="video-grid" id="videoGrid">
           <div class="page-loading">
             <i class="fas fa-spinner fa-spin"></i>
-            <span>Cargando videos...</span>
+            <span data-i18n="videos.loading">Cargando videos...</span>
           </div>
         </div>
 
         <!-- Sin resultados -->
         <div id="noResults" class="no-results" hidden>
           <i class="fas fa-video-slash"></i>
-          <p>No se encontraron videos con ese criterio.</p>
-          <button class="btn btn-outline-black" id="resetFilters">Ver todos</button>
+          <p data-i18n="videos.empty">No se encontraron videos con ese criterio.</p>
+          <button class="btn btn-outline-black" id="resetFilters" data-i18n="gallery.view.all">Ver todos</button>
         </div>
       </div>
     </section>
@@ -153,7 +161,7 @@
       <div class="footer-grid">
         <div class="footer-column">
           <h3 class="footer-title"><span class="favela-text" data-text="FUTEA">FÚTEA</span></h3>
-          <p class="footer-text">Dedicados a visibilizar el arte, el deporte y la cultura a través del audiovisual.</p>
+          <p class="footer-text" data-key="footer_desc">Dedicados a visibilizar el arte, el deporte y la cultura a través del audiovisual.</p>
           <div class="social-links">
             <a href="https://www.facebook.com/futealab" target="_blank" rel="noopener" class="social-link">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
@@ -167,16 +175,16 @@
           </div>
         </div>
         <div class="footer-column">
-          <h3 class="footer-title">Navegación</h3>
+          <h3 class="footer-title" data-i18n="footer.links">Navegación</h3>
           <ul class="footer-links">
-            <li><a href="index.html" class="footer-link">Inicio</a></li>
-            <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
-            <li><a href="productos.html" class="footer-link">Productos</a></li>
-            <li><a href="index.html#contacto" class="footer-link">Contacto</a></li>
+            <li><a href="index.html" class="footer-link" data-i18n="nav.inicio">Inicio</a></li>
+            <li><a href="videos.html" class="footer-link" data-i18n="nav.audiovisuales">Audiovisuales</a></li>
+            <li><a href="productos.html" class="footer-link" data-i18n="nav.productos">Productos</a></li>
+            <li><a href="index.html#contacto" class="footer-link" data-i18n="nav.contacto">Contacto</a></li>
           </ul>
         </div>
         <div class="footer-column">
-          <h3 class="footer-title">Contacto</h3>
+          <h3 class="footer-title" data-i18n="nav.contacto">Contacto</h3>
           <ul class="contact-info">
             <li class="contact-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -190,7 +198,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2025 Fútea. Todos los derechos reservados.</p>
+        <p data-key="footer_copy" data-i18n="footer.copy">© 2025 Fútea. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
@@ -215,10 +223,12 @@
   </div>
 
   <script src="js/supabase-client.js"></script>
+  <script src="js/renderer.js"></script>
   <script src="js/modal.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/admin-modal.js"></script>
   <script src="js/videos-page.js"></script>
+  <script src="js/ui.js"></script>
 </body>
 </html>
 

@@ -23,7 +23,45 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="pages.css">
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast-item {
+      background: #333;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      min-width: 250px;
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+    }
+    .toast-item.show { transform: translateX(0); }
+    .toast-close {
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .toast-close:hover { color: #fff; }
+    .dark .toast-item { background: #eee; color: #111; }
+  </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dark.css">
+  <script src="js/utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script type="application/ld+json">
   {
@@ -63,14 +101,18 @@
           </span>
         </a>
         <nav class="desktop-nav">
-          <a href="#" class="nav-link active">Inicio</a>
-          <a href="galeria.html" class="nav-link">Galería</a>
-          <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
-          <a href="#historias" class="nav-link">Historias</a>
-          <a href="#productos" class="nav-link">Productos</a>
-          <a href="#contacto" class="nav-link">Contacto</a>
+          <a href="#" class="nav-link active" data-i18n="nav.inicio">Inicio</a>
+          <a href="galeria.html" class="nav-link" data-i18n="nav.galeria">Galería</a>
+          <a href="#audiovisuales" class="nav-link" data-i18n="nav.audiovisuales">Audiovisuales</a>
+          <a href="#historias" class="nav-link" data-i18n="nav.historias">Historias</a>
+          <a href="#productos" class="nav-link" data-i18n="nav.productos">Productos</a>
+          <a href="#contacto" class="nav-link" data-i18n="nav.contacto">Contacto</a>
         </nav>
         <div class="header-actions">
+          <button class="icon-button dark-toggle-btn" aria-label="Modo oscuro" title="Modo oscuro">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="icon-button lang-toggle-btn" title="Switch to English">ES</button>
           <button class="icon-button" aria-label="Buscar">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           </button>
@@ -90,15 +132,19 @@
     <div class="mobile-menu">
       <button class="close-menu" aria-label="Cerrar menu"><i class="fas fa-times"></i></button>
       <nav class="mobile-nav">
-        <a href="index.html" class="nav-link active" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Inicio</a>
-        <a href="galeria.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Galería</a>
-        <a href="#audiovisuales" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Audiovisuales</a>
-        <a href="#historias" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Historias</a>
-        <a href="#productos" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Productos</a>
-        <a href="#contacto" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Contacto</a>
+        <a href="index.html" class="nav-link active" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.inicio">Inicio</a>
+        <a href="galeria.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.galeria">Galería</a>
+        <a href="#audiovisuales" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.audiovisuales">Audiovisuales</a>
+        <a href="#historias" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.historias">Historias</a>
+        <a href="#productos" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.productos">Productos</a>
+        <a href="#contacto" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')" data-i18n="nav.contacto">Contacto</a>
         <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
-          <i class="fas fa-lock"></i> Panel admin
+          <i class="fas fa-lock"></i> <span data-i18n="admin.title">Panel Admin</span>
         </button>
+        <div class="mobile-ui-btns">
+          <button class="icon-button dark-toggle-btn" aria-label="Modo oscuro"><i class="fas fa-moon"></i></button>
+          <button class="icon-button lang-toggle-btn">ES</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -111,17 +157,17 @@
       <div class="admin-login-logo">
         <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Futea">
         <div>
-          <h2 id="adminModalTitle">Panel Admin</h2>
-          <span>Acceso restringido</span>
+          <h2 id="adminModalTitle" data-i18n="admin.title">Panel Admin</h2>
+          <span data-i18n="admin.restricted">Acceso restringido</span>
         </div>
       </div>
       <form id="adminLoginForm" class="admin-login-form">
         <div class="admin-login-field">
-          <label for="modalEmail"><i class="fas fa-envelope"></i> Correo</label>
+          <label for="modalEmail"><i class="fas fa-envelope"></i> <span data-i18n="admin.email">Correo</span></label>
           <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
         </div>
         <div class="admin-login-field">
-          <label for="modalPassword"><i class="fas fa-lock"></i> Contraseña</label>
+          <label for="modalPassword"><i class="fas fa-lock"></i> <span data-i18n="admin.password">Contraseña</span></label>
           <div class="modal-pass-wrap">
             <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" id="modalTogglePass" aria-label="Ver contraseña"><i class="fas fa-eye"></i></button>
@@ -129,7 +175,7 @@
         </div>
         <div id="modalLoginError" class="admin-login-error" hidden></div>
         <button type="submit" class="admin-login-btn" id="modalLoginBtn">
-          <span id="modalLoginBtnText">Ingresar al panel</span>
+          <span id="modalLoginBtnText" data-i18n="admin.login">Ingresar al panel</span>
           <i class="fas fa-spinner fa-spin" id="modalLoginSpinner" hidden></i>
         </button>
       </form>
@@ -146,14 +192,14 @@
           <h1 class="hero-title">
             <span class="favela-text" data-text="FUTEA">FÚTEA</span>
           </h1>
-          <p class="hero-subtitle" data-key="hero_subtitle">Donde las historias cobran vida y los suenos se hacen realidad</p>
+          <p class="hero-subtitle" data-key="hero_subtitle" data-i18n="hero.subtitle">Donde las historias cobran vida y los suenos se hacen realidad</p>
           <div class="hero-buttons">
             <a href="#audiovisuales" class="btn btn-white">
-              Ver Audiovisuales
+              <span data-i18n="hero.btn1">Ver Audiovisuales</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </a>
             <a href="#productos" class="btn btn-outline-white">
-              Explorar Productos
+              <span data-i18n="hero.btn2">Explorar Productos</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
             </a>
           </div>
@@ -174,7 +220,7 @@
     <section class="section bg-gray gallery-preview-section">
       <div class="container">
         <div class="gallery-preview-cta">
-          <a href="galeria.html" class="btn btn-black">
+          <a href="galeria.html" class="btn btn-black" data-i18n="section.gallery.cta">
             <i class="fas fa-images"></i> Ver galería completa
           </a>
         </div>
@@ -186,8 +232,8 @@
     <section class="section bg-white">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title" data-key="section_videos_title">Audiovisuales Destacados</h2>
-          <a href="videos.html" class="section-link">Ver todos <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+          <h2 class="section-title" data-key="section_videos_title" data-i18n="section.videos">Audiovisuales Destacados</h2>
+          <a href="videos.html" class="section-link"><span data-i18n="section.videos.all">Ver todos</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
         </div>
         <div class="video-grid" id="videoGrid"></div>
       </div>
@@ -197,7 +243,7 @@
     <div class="section-target" id="historias"></div>
     <section class="section bg-gray">
       <div class="container">
-        <h2 class="section-title text-center" data-key="section_historias_title">Historias de Exito</h2>
+        <h2 class="section-title text-center" data-key="section_historias_title" data-i18n="section.historias">Historias de Exito</h2>
         <div class="stories-grid" id="storyGrid"></div>
       </div>
     </section>
@@ -207,8 +253,8 @@
     <section class="section bg-white">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title" data-key="section_productos_title">Nuestra Tienda</h2>
-          <a href="productos.html" class="section-link">Ver catalogo completo <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+          <h2 class="section-title" data-key="section_productos_title" data-i18n="section.productos">Nuestra Tienda</h2>
+          <a href="productos.html" class="section-link"><span data-i18n="section.productos.all">Ver catalogo completo</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
         </div>
         <div class="product-grid" id="productGrid"></div>
       </div>
@@ -218,17 +264,29 @@
     <section class="section bg-gray">
       <div class="container">
         <div class="newsletter">
-          <h2 class="section-title text-center">Unete a la Comunidad Futea</h2>
-          <p class="newsletter-text">Suscribete para recibir las ultimas noticias, historias y ofertas exclusivas</p>
+          <h2 class="section-title text-center" data-i18n="section.newsletter">Unete a la Comunidad Futea</h2>
+          <p class="newsletter-text" data-i18n="newsletter.text">Suscribete para recibir las ultimas noticias, historias y ofertas exclusivas</p>
           <form class="newsletter-form" onsubmit="return false">
-            <input type="email" placeholder="Tu correo electrónico" class="newsletter-input" required>
-            <button type="submit" class="btn btn-black">Suscribirse</button>
+            <input type="email" data-i18n="newsletter.placeholder" placeholder="Tu correo electronico" class="newsletter-input" required>
+            <button type="submit" class="btn btn-black" data-i18n="newsletter.btn">Suscribirse</button>
           </form>
         </div>
       </div>
     </section>
   </main>
 
+    <!-- patrocinadores -->
+    <section class="section bg-white brands-section">
+      <div class="container">
+        <h2 class="section-title text-center" data-key="section_patrocinadores_title" data-i18n="section.patrocinadores">Patrocinadores</h2>
+        <div class="brands-slider">
+          <div class="brands-track" id="brandsTrack">
+            <!-- Los logos se cargarán aquí -->
+          </div>
+        </div>
+      </div>
+    </section>
+     
   <!-- FOOTER -->
   <div class="section-target" id="contacto"></div>
   <footer class="footer">
@@ -250,18 +308,18 @@
           </div>
         </div>
         <div class="footer-column">
-          <h3 class="footer-title">Enlaces Rapidos</h3>
+          <h3 class="footer-title" data-i18n="footer.links">Enlaces Rápidos</h3>
           <ul class="footer-links">
-            <li><a href="index.html" class="footer-link">Inicio</a></li>
-            <li><a href="galeria.html" class="footer-link">Galería</a></li>
-            <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
-            <li><a href="#historias" class="footer-link">Historias de Exito</a></li>
-            <li><a href="productos.html" class="footer-link">Productos</a></li>
-            <li><a href="#contacto" class="footer-link">Contacto</a></li>
+            <li><a href="index.html" class="footer-link" data-i18n="nav.inicio">Inicio</a></li>
+            <li><a href="galeria.html" class="footer-link" data-i18n="nav.galeria">Galería</a></li>
+            <li><a href="videos.html" class="footer-link" data-i18n="nav.audiovisuales">Audiovisuales</a></li>
+            <li><a href="#historias" class="footer-link" data-i18n="nav.historias">Historias de Éxito</a></li>
+            <li><a href="productos.html" class="footer-link" data-i18n="nav.productos">Productos</a></li>
+            <li><a href="#contacto" class="footer-link" data-i18n="nav.contacto">Contacto</a></li>
           </ul>
         </div>
         <div class="footer-column">
-          <h3 class="footer-title">Contacto</h3>
+          <h3 class="footer-title" data-i18n="nav.contacto">Contacto</h3>
           <ul class="contact-info">
             <li class="contact-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -278,16 +336,16 @@
           </ul>
         </div>
         <div class="footer-column">
-          <h3 class="footer-title">Boletin Informativo</h3>
-          <p class="footer-text">Suscribete para recibir las ultimas noticias y ofertas exclusivas.</p>
+          <h3 class="footer-title" data-i18n="footer.newsletter">Boletín Informativo</h3>
+          <p class="footer-text" data-i18n="footer.newsletter.text">Suscríbete para recibir las últimas noticias y ofertas exclusivas.</p>
           <form class="footer-form" onsubmit="return false">
-            <input type="email" placeholder="Tu correo electrónico" class="footer-input" required>
-            <button type="submit" class="btn btn-black footer-btn">Suscribirse</button>
+            <input type="email" data-i18n="newsletter.placeholder" placeholder="Tu correo electrónico" class="footer-input" required>
+            <button type="submit" class="btn btn-black footer-btn" data-i18n="newsletter.btn">Suscribirse</button>
           </form>
         </div>
       </div>
       <div class="footer-bottom">
-        <p data-key="footer_copy">© 2025 Futea. Todos los derechos reservados.</p>
+        <p data-key="footer_copy" data-i18n="footer.copy">© 2025 Futea. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
@@ -299,25 +357,25 @@
     <div class="cart-backdrop" id="cartBackdrop"></div>
     <div class="cart-panel">
       <div class="cart-header">
-        <h3><i class="fas fa-shopping-bag"></i> Tu carrito</h3>
+        <h3 data-i18n="cart.title"><i class="fas fa-shopping-bag"></i> Tu carrito</h3>
         <button class="cart-close" id="cartClose" aria-label="Cerrar carrito"><i class="fas fa-times"></i></button>
       </div>
       <div class="cart-items" id="cartItems">
         <div class="cart-empty" id="cartEmpty">
           <i class="fas fa-shopping-bag"></i>
-          <p>Tu carrito esta vacio</p>
-          <span>Agrega productos para continuar</span>
+          <p data-i18n="cart.empty">Tu carrito está vacío</p>
+          <span data-i18n="cart.empty.sub">Agrega productos para continuar</span>
         </div>
       </div>
       <div class="cart-footer" id="cartFooter" hidden>
         <div class="cart-total">
-          <span>Total</span>
+          <span data-i18n="cart.total">Total</span>
           <strong id="cartTotal">$0.00</strong>
         </div>
-        <button class="btn btn-black cart-checkout">
+        <button class="btn btn-black cart-checkout" data-i18n="cart.checkout">
           <i class="fab fa-whatsapp"></i> Realizar pedido por WhatsApp
         </button>
-        <button class="btn btn-outline-black" id="clearCart">Vaciar carrito</button>
+        <button class="btn btn-outline-black" id="clearCart" data-i18n="cart.clear">Vaciar carrito</button>
       </div>
     </div>
   </div>
@@ -347,6 +405,7 @@
   <script src="js/renderer.js"></script>
   <script src="js/app.js"></script>
   <script src="js/admin-modal.js"></script>
+  <script src="js/ui.js"></script>
 </body>
 </html>
 

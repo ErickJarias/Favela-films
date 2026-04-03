@@ -1,8 +1,9 @@
-﻿// ===== RENDERER: carga datos desde Supabase y renderiza =====
+// ===== RENDERER: carga datos desde Supabase y renderiza =====
 const _db = window._supabaseClient
 
 const Renderer = (() => {
   const DEFAULT_LOGO = 'https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg'
+  let videoMeta = {}
 
   async function fetchTable(table) {
     try {
@@ -29,12 +30,12 @@ const Renderer = (() => {
     grid.innerHTML = videos.map(v => `
       <div class="video-card">
         <div class="video-thumbnail">
-          <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" 
+          <img src="${getVideoThumb(v)}" 
                alt="${v.title}" loading="lazy"
                onerror="this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg'"
                style="background:#111">
           <div class="video-overlay">
-            <button class="play-button" onclick="abrirVideoModal('${v.id}','${v.title.replace(/'/g,"\\'")}')">
+            <button class="play-button" onclick="abrirVideoModal('${getVideoRef(v).replace(/'/g,"\\'")}','${v.title.replace(/'/g,"\\'")}','${getVideoPlatform(v)}')">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </button>
           </div>
@@ -90,20 +91,38 @@ const Renderer = (() => {
 
     grid.innerHTML = stories.map(v => {
       const safeTitle = v.title.replace(/'/g, "\\'")
+      const safeRef = getVideoRef(v).replace(/'/g, "\\'")
+      const safePlatform = getVideoPlatform(v)
       return `
-      <div class="story-card" onclick="abrirVideoModal('${v.id}','${safeTitle}')">
+      <div class="story-card" onclick="abrirVideoModal('${safeRef}','${safeTitle}','${safePlatform}')">
         <div class="story-image">
-          <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}" loading="lazy">
+          <img src="${getVideoThumb(v)}" alt="${v.title}" loading="lazy">
           <span class="story-category">${v.duration || 'Historia'}</span>
           <div class="story-play-overlay"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
         </div>
         <div class="story-content">
           <h3 class="story-title">${v.title}</h3>
           <p class="story-excerpt">${v.views || 'Contenido audiovisual de Futea'}</p>
-          <button class="btn btn-outline-black" onclick="event.stopPropagation();abrirVideoModal('${v.id}','${safeTitle}')">Ver Historia <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+          <button class="btn btn-outline-black" onclick="event.stopPropagation();abrirVideoModal('${safeRef}','${safeTitle}','${safePlatform}')">Ver Historia <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
         </div>
       </div>`
     }).join('')
+  }
+
+  function getVideoMetaById(id) {
+    return videoMeta[id] || {}
+  }
+
+  function getVideoRef(video) {
+    return getVideoMetaById(video.id).url || video.id
+  }
+
+  function getVideoPlatform(video) {
+    return getVideoMetaById(video.id).platform || 'youtube'
+  }
+
+  function getVideoThumb(video) {
+    return getVideoMetaById(video.id).thumbnail || `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
   }
 
   function applyConfig(config) {
@@ -120,6 +139,9 @@ const Renderer = (() => {
     })
     if (config.color_gold) document.documentElement.style.setProperty('--color-gold', config.color_gold)
     if (config.color_black) document.documentElement.style.setProperty('--color-black', config.color_black)
+    const whatsappNumber = config.whatsapp_order_number || config.contact_phone || ''
+    document.body.dataset.whatsappNumber = whatsappNumber
+    document.body.dataset.whatsappSellers = config.whatsapp_seller_numbers || ''
     document.querySelectorAll('.logo-image').forEach(img => {
       img.onerror = () => { img.onerror = null; img.src = DEFAULT_LOGO }
       img.src = config.logo_url || DEFAULT_LOGO
@@ -139,6 +161,9 @@ const Renderer = (() => {
     const productsData = products
     const sliderData = sliderRows.map(r => r.url)
     const configData = Object.fromEntries(configRows.map(r => [r.key, r.value]))
+    videoMeta = (() => {
+      try { return JSON.parse(configData.video_meta || '{}') } catch { return {} }
+    })()
 
     renderVideos(videosData)
     renderStories(videosData)

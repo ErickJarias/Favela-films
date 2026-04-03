@@ -41,7 +41,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal()
 })
 
-// Toggle contrasena
+// Toggle contraseña
 togglePass?.addEventListener('click', () => {
   const isText = passInput.type === 'text'
   passInput.type = isText ? 'password' : 'text'
@@ -71,10 +71,10 @@ function traducirError(err) {
   const msg = (err?.message || '').toLowerCase()
 
   if (msg.includes('invalid login credentials')) {
-    return 'Correo o contrasena incorrectos.'
+    return 'Correo o contraseña incorrectos.'
   }
   if (msg.includes('email not confirmed')) {
-    return 'Confirma tu correo antes de iniciar sesion.'
+    return 'Confirma tu correo antes de iniciar sesión.'
   }
   if (msg.includes('too many requests')) {
     return 'Demasiados intentos. Espera un momento.'
@@ -83,6 +83,5 @@ function traducirError(err) {
     return 'Error de red. Verifica tu conexion.'
   }
 
-  return err?.message || 'Error al iniciar sesion. Intenta de nuevo.'
+  return err?.message || 'Error al iniciar sesión. Intenta de nuevo.'
 }
-

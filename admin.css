@@ -347,6 +347,7 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-8
 .field-group.full { grid-column: 1 / -1; }
 .field-group label { font-size: 0.78rem; font-weight: 500; color: var(--gray-600); }
 .field-group label i { margin-right: 0.3rem; color: var(--gold); }
+.field-group small { font-size: 0.72rem; color: var(--gray-500); margin-top: 0.1rem; }
 
 .field-group input,
 .field-group textarea,

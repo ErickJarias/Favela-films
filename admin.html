@@ -14,7 +14,7 @@
 </head>
 <body class="admin-body">
 
-  <!-- Loader inicial mientras Supabase verifica sesion -->
+  <!-- Loader inicial mientras Supabase verifica sesión -->
   <div id="authLoader" class="auth-loader">
     <div class="auth-loader-inner">
       <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Fútea">
@@ -202,15 +202,15 @@
         <!-- ===== VIDEOS ===== -->
         <section class="admin-section" id="section-videos">
           <div class="section-head">
-            <h2><i class="fas fa-video"></i> Videos de YouTube</h2>
-            <p>Añade o elimina videos que aparecen en la sección Audiovisuales.</p>
+            <h2><i class="fas fa-video"></i> Videos (YouTube, TikTok, Facebook y más)</h2>
+            <p>Añade videos con solo pegar la URL y define su categoría para filtros.</p>
           </div>
           <div class="card">
             <div class="card-header"><h3>Añadir video</h3></div>
             <div class="card-body fields-grid">
               <div class="field-group">
-                <label>ID de YouTube</label>
-                <input type="text" id="newVideoId" placeholder="ej: KKZSGJvQLnY">
+                <label>URL del video</label>
+                <input type="url" id="newVideoUrl" placeholder="https://youtube.com/... o https://tiktok.com/...">
               </div>
               <div class="field-group">
                 <label>Título</label>
@@ -223,6 +223,16 @@
               <div class="field-group">
                 <label>Visualizaciones</label>
                 <input type="text" id="newVideoViews" placeholder="125K visualizaciones">
+              </div>
+              <div class="field-group">
+                <label>Categoría</label>
+                <select id="newVideoCategory">
+                  <option value="general">General</option>
+                  <option value="torneo">Torneo</option>
+                  <option value="historia">Historia</option>
+                  <option value="entrenamiento">Entrenamiento</option>
+                  <option value="entrevista">Entrevista</option>
+                </select>
               </div>
             </div>
             <div class="card-footer">
@@ -301,6 +311,15 @@
               <div class="field-group">
                 <label><i class="fas fa-phone"></i> Teléfono</label>
                 <input type="text" data-config="contact_phone" placeholder="+57 3115998002">
+              </div>
+              <div class="field-group">
+                <label><i class="fab fa-whatsapp"></i> WhatsApp pedidos (principal)</label>
+                <input type="text" data-config="whatsapp_order_number" placeholder="573115998002">
+              </div>
+              <div class="field-group full">
+                <label><i class="fas fa-users"></i> Vendedores WhatsApp (opcional)</label>
+                <input type="text" data-config="whatsapp_seller_numbers" placeholder="573001112233,573004445566">
+                <small>Separa los numeros por coma. El carrito usara el primero como vendedor activo.</small>
               </div>
               <div class="field-group">
                 <label><i class="fas fa-envelope"></i> Email</label>
@@ -390,5 +409,3 @@
   <script src="admin/editor.js"></script>
 </body>
 </html>
-
-

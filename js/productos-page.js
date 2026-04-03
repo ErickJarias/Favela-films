@@ -25,6 +25,23 @@ async function loadProducts() {
   renderFiltered()
 }
 
+async function loadCheckoutConfig() {
+  if (!db) return
+  try {
+    const { data, error } = await db
+      .from('site_config')
+      .select('key,value')
+      .in('key', ['whatsapp_order_number', 'whatsapp_seller_numbers', 'contact_phone'])
+    if (error) throw error
+
+    const config = Object.fromEntries((data || []).map(row => [row.key, row.value]))
+    document.body.dataset.whatsappNumber = config.whatsapp_order_number || config.contact_phone || ''
+    document.body.dataset.whatsappSellers = config.whatsapp_seller_numbers || ''
+  } catch {
+    // Si falla, el carrito mantiene su número por defecto.
+  }
+}
+
 function getSortedFiltered() {
   let list = [...allProducts]
 
@@ -157,4 +174,7 @@ document.querySelector('.back-to-top')?.addEventListener('click', () =>
   window.scrollTo({ top: 0, behavior: 'smooth' })
 )
 
-document.addEventListener('DOMContentLoaded', loadProducts)
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCheckoutConfig()
+  await loadProducts()
+})

@@ -36,12 +36,12 @@ function showLogin() {
   if (authLoader) authLoader.hidden = true
   adminDashboard.hidden = true
   loginScreen.hidden = false
-  btnLoginText.textContent = 'Iniciar sesion'
+  btnLoginText.textContent = 'Iniciar sesión'
   loginSpinner.hidden = true
   btnLogin.disabled = false
 }
 
-// Toggle contrasena
+// Toggle contraseña
 togglePass?.addEventListener('click', () => {
   const isText = loginPassword.type === 'text'
   loginPassword.type = isText ? 'password' : 'text'
@@ -66,7 +66,7 @@ loginForm?.addEventListener('submit', async (e) => {
   } catch (err) {
     loginError.textContent = traducirError(err)
     loginError.hidden = false
-    btnLoginText.textContent = 'Iniciar sesion'
+    btnLoginText.textContent = 'Iniciar sesión'
     loginSpinner.hidden = true
     btnLogin.disabled = false
   }
@@ -78,7 +78,7 @@ btnLogout?.addEventListener('click', async () => {
   showLogin()
 })
 
-// Estado de sesion
+// Estado de sesión
 auth.onAuthStateChange((_event, session) => {
   const user = session?.user || null
   if (user) {
@@ -105,10 +105,10 @@ function traducirError(err) {
   const msg = (err?.message || '').toLowerCase()
 
   if (msg.includes('invalid login credentials')) {
-    return 'Correo o contrasena incorrectos.'
+    return 'Correo o contraseña incorrectos.'
   }
   if (msg.includes('email not confirmed')) {
-    return 'Confirma tu correo antes de iniciar sesion.'
+    return 'Confirma tu correo antes de iniciar sesión.'
   }
   if (msg.includes('too many requests')) {
     return 'Demasiados intentos. Espera un momento.'
@@ -117,6 +117,5 @@ function traducirError(err) {
     return 'Error de red. Verifica tu conexion.'
   }
 
-  return err?.message || 'No se pudo iniciar sesion.'
+  return err?.message || 'No se pudo iniciar sesión.'
 }
-

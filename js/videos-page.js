@@ -1,8 +1,39 @@
-// ===== PÁGINA AUDIOVISUALES =====
+// ===== PAGINA AUDIOVISUALES =====
 let allVideos = []
+let videoMeta = {}
 let activeFilter = 'all'
 let searchQuery = ''
 const db = window._supabaseClient
+
+function getVideoMeta(video) {
+  return videoMeta[video.id] || {}
+}
+
+function getVideoRef(video) {
+  return getVideoMeta(video).url || video.id
+}
+
+function getVideoPlatform(video) {
+  return getVideoMeta(video).platform || 'youtube'
+}
+
+function getVideoCategory(video) {
+  return (getVideoMeta(video).category || 'general').toLowerCase()
+}
+
+function getVideoThumb(video) {
+  return getVideoMeta(video).thumbnail || `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
+}
+
+async function loadVideoMeta() {
+  try {
+    const { data, error } = await db.from('site_config').select('key,value').eq('key', 'video_meta').maybeSingle()
+    if (error) throw error
+    videoMeta = data?.value ? JSON.parse(data.value) : {}
+  } catch {
+    videoMeta = {}
+  }
+}
 
 async function loadVideos() {
   try {
@@ -12,16 +43,20 @@ async function loadVideos() {
   } catch {
     allVideos = []
   }
+
+  await loadVideoMeta()
   renderFiltered()
 }
 
 function renderFiltered() {
-  let filtered = allVideos
+  let filtered = [...allVideos]
 
   if (activeFilter !== 'all') {
-    filtered = filtered.filter(v =>
-      (v.tags || v.title || '').toLowerCase().includes(activeFilter.toLowerCase())
-    )
+    filtered = filtered.filter(v => {
+      const category = getVideoCategory(v)
+      const tags = `${category} ${v.title || ''} ${v.views || ''}`.toLowerCase()
+      return tags.includes(activeFilter.toLowerCase())
+    })
   }
 
   if (searchQuery) {
@@ -43,10 +78,16 @@ function renderFiltered() {
   }
 
   noResults.hidden = true
-  grid.innerHTML = filtered.map(v => `
-    <div class="video-card" onclick="abrirVideoModal('${v.id}','${v.title.replace(/'/g,"\\'")}')">
+  grid.innerHTML = filtered.map(v => {
+    const safeTitle = v.title.replace(/'/g, "\\'")
+    const safeRef = getVideoRef(v).replace(/'/g, "\\'")
+    const platform = getVideoPlatform(v)
+    const category = getVideoCategory(v)
+
+    return `
+    <div class="video-card" onclick="abrirVideoModal('${safeRef}','${safeTitle}','${platform}')">
       <div class="video-thumbnail">
-        <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}" loading="lazy">
+        <img src="${getVideoThumb(v)}" alt="${v.title}" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg'">
         <div class="video-overlay">
           <button class="play-button" aria-label="Reproducir">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -56,12 +97,13 @@ function renderFiltered() {
       </div>
       <div class="video-info">
         <h3 class="video-title">${v.title}</h3>
-        <p class="video-views">${v.views}</p>
+        <p class="video-views">${v.views} · ${category}</p>
       </div>
-    </div>`).join('')
+    </div>`
+  }).join('')
 }
 
-// Búsqueda
+// Busqueda
 const searchInput = document.getElementById('videoSearch')
 const clearBtn = document.getElementById('clearSearch')
 
@@ -108,7 +150,6 @@ document.querySelector('.back-to-top')?.addEventListener('click', () =>
   window.scrollTo({ top: 0, behavior: 'smooth' })
 )
 
-// Modal stub (usa modal.js pero Slider no existe en esta página)
 if (typeof Slider === 'undefined') {
   window.Slider = { pause: () => {}, resume: () => {} }
 }

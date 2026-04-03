@@ -21,6 +21,7 @@
   <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
   <title>Futea - Audiovisuales e Historias</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="pages.css">
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -49,7 +50,7 @@
   }
   </script>
 </head>
-<body>
+<body data-whatsapp-number="573115998002">
 
   <!-- HEADER -->
   <header class="header">
@@ -119,10 +120,10 @@
           <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
         </div>
         <div class="admin-login-field">
-          <label for="modalPassword"><i class="fas fa-lock"></i> Contrasena</label>
+          <label for="modalPassword"><i class="fas fa-lock"></i> Contraseña</label>
           <div class="modal-pass-wrap">
             <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
-            <button type="button" id="modalTogglePass" aria-label="Ver contrasena"><i class="fas fa-eye"></i></button>
+            <button type="button" id="modalTogglePass" aria-label="Ver contraseña"><i class="fas fa-eye"></i></button>
           </div>
         </div>
         <div id="modalLoginError" class="admin-login-error" hidden></div>
@@ -208,7 +209,7 @@
           <h2 class="section-title text-center">Unete a la Comunidad Futea</h2>
           <p class="newsletter-text">Suscribete para recibir las ultimas noticias, historias y ofertas exclusivas</p>
           <form class="newsletter-form" onsubmit="return false">
-            <input type="email" placeholder="Tu correo electronico" class="newsletter-input" required>
+            <input type="email" placeholder="Tu correo electrónico" class="newsletter-input" required>
             <button type="submit" class="btn btn-black">Suscribirse</button>
           </form>
         </div>
@@ -267,7 +268,7 @@
           <h3 class="footer-title">Boletin Informativo</h3>
           <p class="footer-text">Suscribete para recibir las ultimas noticias y ofertas exclusivas.</p>
           <form class="footer-form" onsubmit="return false">
-            <input type="email" placeholder="Tu correo electronico" class="footer-input" required>
+            <input type="email" placeholder="Tu correo electrónico" class="footer-input" required>
             <button type="submit" class="btn btn-black footer-btn">Suscribirse</button>
           </form>
         </div>
@@ -301,7 +302,7 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
         <button class="btn btn-black cart-checkout">
-          <i class="fas fa-lock"></i> Proceder al pago
+          <i class="fab fa-whatsapp"></i> Realizar pedido por WhatsApp
         </button>
         <button class="btn btn-outline-black" id="clearCart">Vaciar carrito</button>
       </div>
@@ -335,5 +336,4 @@
   <script src="js/admin-modal.js"></script>
 </body>
 </html>
-
 

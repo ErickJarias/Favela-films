@@ -3,21 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Favela films - Audiovisuales e Historias</title>
+  <meta name="description" content="Futea (Favela Films): audiovisuales, historias y productos. Contamos historias reales de deporte, cultura y comunidad en Cucuta.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="author" content="Futea - Favela Films">
+  <link rel="canonical" href="https://tudominio.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:site_name" content="Futea">
+  <meta property="og:title" content="Futea | Audiovisuales e Historias">
+  <meta property="og:description" content="Historias que nacen en las canchas: audiovisuales, cultura y comunidad.">
+  <meta property="og:url" content="https://tudominio.com/">
+  <meta property="og:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Futea | Audiovisuales e Historias">
+  <meta name="twitter:description" content="Historias de deporte, arte y cultura contadas por Futea.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <title>Futea - Audiovisuales e Historias</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "Futea - Favela Films",
+        "url": "https://tudominio.com/",
+        "logo": "https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg",
+        "sameAs": [
+          "https://web.facebook.com/filmsfavela",
+          "https://www.instagram.com/favelafilms_/",
+          "https://www.youtube.com/@FavelaFilmStudio"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "name": "Futea",
+        "url": "https://tudominio.com/",
+        "inLanguage": "es"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <!-- Header -->
+
+  <!-- HEADER -->
   <header class="header">
     <div class="container">
       <div class="header-content">
         <a href="#" class="logo">
-          <img src="images/logo.jpeg" alt="Favela Films Logo" class="logo-image">
-          <span class="logo-text"><span class="favela-text" data-text="FAVELA">FAVELA</span> <span class="gold-text">films</span></span>
+          <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Futea Logo" class="logo-image" data-key="logo_url">
+          <span class="logo-text">
+            <span class="favela-text" data-text="FÚTEA">FÚTEA</span>
+          </span>
         </a>
-        
         <nav class="desktop-nav">
           <a href="#" class="nav-link active">Inicio</a>
           <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
@@ -25,59 +68,83 @@
           <a href="#productos" class="nav-link">Productos</a>
           <a href="#contacto" class="nav-link">Contacto</a>
         </nav>
-        
         <div class="header-actions">
-          <button class="icon-button">
+          <button class="icon-button" aria-label="Buscar">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           </button>
-          <a href="/carrito" class="icon-button cart-icon">
+          <a href="#" class="icon-button cart-icon" aria-label="Carrito">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
             <span class="cart-count">0</span>
           </a>
-          <button class="mobile-menu-button">
+          <button class="icon-button admin-lock-button desktop-admin-lock" id="adminLockBtn" aria-label="Administrador" title="Panel de administración">
+            <i class="fas fa-lock"></i>
+          </button>
+          <button class="mobile-menu-button" aria-label="Menu">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
           </button>
         </div>
       </div>
     </div>
-    
-    <!-- Mobile Menu -->
     <div class="mobile-menu">
-      <button class="close-menu">
-        <i class="fas fa-times"></i>
-      </button>
+      <button class="close-menu"><i class="fas fa-times"></i></button>
       <nav class="mobile-nav">
         <a href="#" class="nav-link active">Inicio</a>
         <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
         <a href="#historias" class="nav-link">Historias</a>
         <a href="#productos" class="nav-link">Productos</a>
         <a href="#contacto" class="nav-link">Contacto</a>
+        <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
+          <i class="fas fa-lock"></i>
+          Panel admin
+        </button>
       </nav>
     </div>
   </header>
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section con Slider -->
-    <section class="hero" id="inicio">
-      <div class="hero-slider">
-        <div class="slide active" style="background-image: url('images/WhatsApp\ Image\ 2025-07-28\ at\ 1.37.54\ PM\ \(1\).jpeg');">
-          <div class="hero-overlay"></div>
-        </div>
-        <div class="slide" style="background-image: url('images/WhatsApp\ Image\ 2025-07-28\ at\ 1.37.47\ PM.jpeg');">
-          <div class="hero-overlay"></div>
-        </div>
-        <div class="slide" style="background-image: url('images/WhatsApp\ Image\ 2025-07-28\ at\ 1.37.52\ PM.jpeg');">
-          <div class="hero-overlay"></div>
-        </div>
-        <div class="slide" style="background-image: url('images/WhatsApp\ Image\ 2025-07-28\ at\ 1.37.55\ PM.jpeg');">
-          <div class="hero-overlay"></div>
+
+  <!-- MODAL LOGIN ADMIN -->
+  <div id="adminLoginModal" class="admin-login-modal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle" hidden>
+    <div class="admin-login-backdrop"></div>
+    <div class="admin-login-card">
+      <button class="admin-login-close" id="adminLoginClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+      <div class="admin-login-logo">
+        <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Futea">
+        <div>
+          <h2 id="adminModalTitle">Panel Admin</h2>
+          <span>Acceso restringido</span>
         </div>
       </div>
-      
-      <div class="container">
+      <form id="adminLoginForm" class="admin-login-form">
+        <div class="admin-login-field">
+          <label for="modalEmail"><i class="fas fa-envelope"></i> Correo</label>
+          <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
+        </div>
+        <div class="admin-login-field">
+          <label for="modalPassword"><i class="fas fa-lock"></i> Contrasena</label>
+          <div class="modal-pass-wrap">
+            <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" id="modalTogglePass" aria-label="Ver contrasena"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div id="modalLoginError" class="admin-login-error" hidden></div>
+        <button type="submit" class="admin-login-btn" id="modalLoginBtn">
+          <span id="modalLoginBtnText">Ingresar al panel</span>
+          <i class="fas fa-spinner fa-spin" id="modalLoginSpinner" hidden></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SLIDER -->
+    <section class="hero" id="inicio">
+      <div class="slider-track" id="sliderTrack"></div>
+      <div class="hero-overlay"></div>
+      <div class="container hero-content-wrap">
         <div class="hero-content">
-          <h1 class="hero-title"><span class="favela-text" data-text="FAVELA">FAVELA</span> <span class="gold-text">films</span></h1>
-          <p class="hero-subtitle">Donde las historias cobran vida y los sueños se hacen realidad</p>
+          <h1 class="hero-title">
+            <span class="favela-text" data-text="FUTEA">FÚTEA</span>
+          </h1>
+          <p class="hero-subtitle" data-key="hero_subtitle">Donde las historias cobran vida y los suenos se hacen realidad</p>
           <div class="hero-buttons">
             <a href="#audiovisuales" class="btn btn-white">
               Ver Audiovisuales
@@ -90,277 +157,58 @@
           </div>
         </div>
       </div>
-      
-      <!-- Indicadores del slider -->
-      <div class="slider-indicators">
-        <span class="indicator active" data-slide="0"></span>
-        <span class="indicator" data-slide="1"></span>
-        <span class="indicator" data-slide="2"></span>
-        <span class="indicator" data-slide="3"></span>
-      </div>
-      
-      <!-- Controles del slider -->
       <div class="slider-controls">
-        <button class="slider-btn prev-btn" onclick="cambiarSlideManual('prev')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <button class="slider-btn" id="sliderPrev" aria-label="Anterior">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
-        <button class="slider-btn next-btn" onclick="cambiarSlideManual('next')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <button class="slider-btn" id="sliderNext" aria-label="Siguiente">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
       </div>
+      <div class="slider-dots" id="sliderDots"></div>
     </section>
 
-    <!-- Section target for navigation -->
+    <!-- VIDEOS -->
     <div class="section-target" id="audiovisuales"></div>
-    
-    <!-- Videos Section -->
     <section class="section bg-white">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Audiovisuales Destacados</h2>
-          <a href="/videos" class="section-link">
-            Ver todos
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </a>
+          <h2 class="section-title" data-key="section_videos_title">Audiovisuales Destacados</h2>
+          <a href="videos.html" class="section-link">Ver todos <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
         </div>
-        
-        <div class="video-grid">
-          <!-- Video 1 -->
-          <div class="video-card" data-video-id="KKZSGJvQLnY" data-video-title="Final del torneo m-24">
-            <div class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/KKZSGJvQLnY/maxresdefault.jpg" alt="Final del torneo m-24">
-              <div class="video-overlay">
-                <button class="play-button" onclick="abrirVideoModal('KKZSGJvQLnY', 'Los mejores goles de la temporada')">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                </button>
-              </div>
-              <span class="video-duration">10:25</span>
-            </div>
-            <div class="video-info">
-              <h3 class="video-title">Final del torneo m-24</h3>
-              <p class="video-views">125K visualizaciones</p>
-            </div>
-          </div>
-          
-          <!-- Video 2 -->
-          <div class="video-card" data-video-id="dwGl35PNM4s" data-video-title="¿Què es Favela Films?">
-            <div class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/dwGl35PNM4s/maxresdefault.jpg" alt="¿Què es Favela Films?">
-              <div class="video-overlay">
-                <button class="play-button" onclick="abrirVideoModal('dwGl35PNM4s', '¿Què es Favela Films?')">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                </button>
-              </div>
-              <span class="video-duration">8:15</span>
-            </div>
-            <div class="video-info">
-              <h3 class="video-title">¿Què es Favela Films?</h3>
-              <p class="video-views">98K visualizaciones</p>
-            </div>
-          </div>
-          
-          <!-- Video 3 -->
-          <div class="video-card" data-video-id="jNQXAC9IVRw" data-video-title="Historias de superación en el fútbol">
-            <div class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" alt="Historias de superación en el fútbol">
-              <div class="video-overlay">
-                <button class="play-button" onclick="abrirVideoModal('jNQXAC9IVRw', 'Historias de superación en el fútbol')">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                </button>
-              </div>
-              <span class="video-duration">15:40</span>
-            </div>
-            <div class="video-info">
-              <h3 class="video-title">Historias de superación en el fútbol</h3>
-              <p class="video-views">210K visualizaciones</p>
-            </div>
-          </div>
-          
-          <!-- Video 4 -->
-          <div class="video-card" data-video-id="M7lc1UVf-VE" data-video-title="Entrenamiento profesional revelado">
-            <div class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg" alt="Entrenamiento profesional revelado">
-              <div class="video-overlay">
-                <button class="play-button" onclick="abrirVideoModal('M7lc1UVf-VE', 'Entrenamiento profesional revelado')">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                </button>
-              </div>
-              <span class="video-duration">12:30</span>
-            </div>
-            <div class="video-info">
-              <h3 class="video-title">Entrenamiento profesional revelado</h3>
-              <p class="video-views">87K visualizaciones</p>
-            </div>
-          </div>
-        </div>
+        <div class="video-grid" id="videoGrid"></div>
       </div>
     </section>
 
-    <!-- Section target for navigation -->
+    <!-- HISTORIAS -->
     <div class="section-target" id="historias"></div>
-    
-    <!-- Stories Section -->
     <section class="section bg-gray">
       <div class="container">
-        <h2 class="section-title text-center">Historias de Éxito</h2>
-        
-        <div class="stories-grid">
-          <!-- Historia 1 -->
-          <div class="story-card" onclick="abrirVideoModal('dQw4w9WgXcQ', 'De las calles a la gloria - Historia completa')">
-            <div class="story-image">
-              <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="De las calles a la gloria">
-              <span class="story-category">Superación</span>
-              <div class="story-play-overlay">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </div>
-            </div>
-            <div class="story-content">
-              <h3 class="story-title">De las calles a la gloria</h3>
-              <p class="story-excerpt">La historia de Carlos, quien pasó de jugar en las calles a convertirse en estrella internacional.</p>
-              <button class="btn btn-outline-black" onclick="event.stopPropagation(); abrirVideoModal('dQw4w9WgXcQ', 'De las calles a la gloria - Historia completa')">
-                Ver Historia
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Historia 2 -->
-          <div class="story-card" onclick="abrirVideoModal('ScMzIvxBSi4', 'El entrenador que cambió un barrio')">
-            <div class="story-image">
-              <img src="https://img.youtube.com/vi/ScMzIvxBSi4/maxresdefault.jpg" alt="El entrenador que cambió un barrio">
-              <span class="story-category">Comunidad</span>
-              <div class="story-play-overlay">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </div>
-            </div>
-            <div class="story-content">
-              <h3 class="story-title">El entrenador que cambió un barrio</h3>
-              <p class="story-excerpt">Cómo un entrenador transformó la vida de decenas de jóvenes a través del fútbol comunitario.</p>
-              <button class="btn btn-outline-black" onclick="event.stopPropagation(); abrirVideoModal('ScMzIvxBSi4', 'El entrenador que cambió un barrio')">
-                Ver Historia
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Historia 3 -->
-          <div class="story-card" onclick="abrirVideoModal('jNQXAC9IVRw', 'Recuperación milagrosa')">
-            <div class="story-image">
-              <img src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" alt="Recuperación milagrosa">
-              <span class="story-category">Perseverancia</span>
-              <div class="story-play-overlay">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </div>
-            </div>
-            <div class="story-content">
-              <h3 class="story-title">Recuperación milagrosa</h3>
-              <p class="story-excerpt">La increíble historia de recuperación de María tras una lesión que amenazaba su carrera.</p>
-              <button class="btn btn-outline-black" onclick="event.stopPropagation(); abrirVideoModal('jNQXAC9IVRw', 'Recuperación milagrosa')">
-                Ver Historia
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              </button>
-            </div>
-          </div>
-        </div>
+        <h2 class="section-title text-center" data-key="section_historias_title">Historias de Exito</h2>
+        <div class="stories-grid" id="storyGrid"></div>
       </div>
     </section>
 
-    <!-- Section target for navigation -->
+    <!-- PRODUCTOS -->
     <div class="section-target" id="productos"></div>
-    
-    <!-- Products Section -->
     <section class="section bg-white">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Nuestra Tienda</h2>
-          <a href="/productos" class="section-link">
-            Ver catálogo completo
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </a>
+          <h2 class="section-title" data-key="section_productos_title">Nuestra Tienda</h2>
+          <a href="productos.html" class="section-link">Ver catalogo completo <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
         </div>
-        
-        <div class="product-grid">
-          <div class="product-card">
-            <div class="product-image">
-              <img src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd15?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Camiseta Oficial Edición Especial">
-              <span class="product-badge">NUEVO</span>
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              </button>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Camiseta Oficial Edición Especial</h3>
-              <p class="product-price">$89.99</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <div class="product-image">
-              <img src="https://images.unsplash.com/photo-1614624532983-1fe21c4b6c5a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Balón de Fútbol Profesional">
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              </button>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Balón de Fútbol Profesional</h3>
-              <p class="product-price">$49.99</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <div class="product-image">
-              <img src="https://images.unsplash.com/photo-1543507743-ea1b2b7432d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Zapatillas de Fútbol Premium">
-              <span class="product-badge">NUEVO</span>
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              </button>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Zapatillas de Fútbol Premium</h3>
-              <p class="product-price">$129.99</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <div class="product-image">
-              <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="DVD Colección Historias de Éxito">
-              <button class="wishlist-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              </button>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">DVD Colección Historias de Éxito</h3>
-              <p class="product-price">$34.99</p>
-              <button class="btn btn-black">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
+        <div class="product-grid" id="productGrid"></div>
       </div>
     </section>
 
-    <!-- Newsletter Section -->
+    <!-- NEWSLETTER -->
     <section class="section bg-gray">
       <div class="container">
         <div class="newsletter">
-          <h2 class="section-title text-center">Únete a la Comunidad Favela</h2>
-          <p class="newsletter-text">Suscríbete para recibir las últimas noticias, historias y ofertas exclusivas</p>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Tu correo electrónico" class="newsletter-input">
+          <h2 class="section-title text-center">Unete a la Comunidad Futea</h2>
+          <p class="newsletter-text">Suscribete para recibir las ultimas noticias, historias y ofertas exclusivas</p>
+          <form class="newsletter-form" onsubmit="return false">
+            <input type="email" placeholder="Tu correo electronico" class="newsletter-input" required>
             <button type="submit" class="btn btn-black">Suscribirse</button>
           </form>
         </div>
@@ -368,96 +216,124 @@
     </section>
   </main>
 
-  <!-- Section target for navigation -->
+  <!-- FOOTER -->
   <div class="section-target" id="contacto"></div>
-  
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-column">
-          <h3 class="footer-title"><span class="favela-text" data-text="FAVELA">FAVELA</span> <span class="gold-text">films</span></h3>
-          <p class="footer-text">Dedicados a visibilizar el arte, el deporte y la cultura, contando historias de éxito que nacen en las canchas y se expresan en la creatividad de nuestras comunidades. Conectamos pasión, talento y transformación a través del deporte y la expresión cultural.</p>
+          <h3 class="footer-title"><span class="favela-text" data-text="FUTEA">FUTEA</span></h3>
+          <p class="footer-text" data-key="footer_desc">Dedicados a visibilizar el arte, el deporte y la cultura, contando historias de exito que nacen en las canchas y se expresan en la creatividad de nuestras comunidades.</p>
           <div class="social-links">
-            <a href="https://web.facebook.com/filmsfavela" target="_blank" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            <a href="https://www.facebook.com/futealab" target="_blank" rel="noopener" class="social-link" data-key="social_facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
             </a>
-            <a href="https://www.instagram.com/favelafilms_/" target="_blank" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+            <a href="https://www.instagram.com/favelafilms_/" target="_blank" rel="noopener" class="social-link" data-key="social_instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
             </a>
-            <a href="https://www.youtube.com/@FavelaFilmStudio" target="_blank" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
+            <a href="https://www.youtube.com/@FavelaFilmStudio" target="_blank" rel="noopener" class="social-link" data-key="social_youtube">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
             </a>
           </div>
         </div>
-        
         <div class="footer-column">
-          <h3 class="footer-title">Enlaces Rápidos</h3>
+          <h3 class="footer-title">Enlaces Rapidos</h3>
           <ul class="footer-links">
-            <li><a href="/" class="footer-link">Inicio</a></li>
-            <li><a href="#audiovisuales" class="footer-link">Audiovisuales</a></li>
-            <li><a href="#historias" class="footer-link">Historias de Éxito</a></li>
-            <li><a href="#productos" class="footer-link">Productos</a></li>
+            <li><a href="index.html" class="footer-link">Inicio</a></li>
+            <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
+            <li><a href="#historias" class="footer-link">Historias de Exito</a></li>
+            <li><a href="productos.html" class="footer-link">Productos</a></li>
             <li><a href="#contacto" class="footer-link">Contacto</a></li>
           </ul>
         </div>
-        
         <div class="footer-column">
           <h3 class="footer-title">Contacto</h3>
           <ul class="contact-info">
             <li class="contact-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              <span>Cúcuta, Norte de Santander</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span data-key="contact_address">Cucuta, Norte de Santander</span>
             </li>
             <li class="contact-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-              <span>+57 3115998002</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              <span data-key="contact_phone">+57 3115998002</span>
             </li>
             <li class="contact-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-              <span>filmsfavela@gmail.com</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              <span data-key="contact_email">filmsfavela@gmail.com</span>
             </li>
           </ul>
         </div>
-        
         <div class="footer-column">
-          <h3 class="footer-title">Boletín Informativo</h3>
-          <p class="footer-text">Suscríbete para recibir las últimas noticias y ofertas exclusivas.</p>
-          <form class="footer-form">
-            <input type="email" placeholder="Tu correo electrónico" class="footer-input">
+          <h3 class="footer-title">Boletin Informativo</h3>
+          <p class="footer-text">Suscribete para recibir las ultimas noticias y ofertas exclusivas.</p>
+          <form class="footer-form" onsubmit="return false">
+            <input type="email" placeholder="Tu correo electronico" class="footer-input" required>
             <button type="submit" class="btn btn-black footer-btn">Suscribirse</button>
           </form>
         </div>
       </div>
-      
       <div class="footer-bottom">
-        <p>© 2025 Favela films. Todos los derechos reservados.</p>
+        <p data-key="footer_copy">© 2025 Futea. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
-  
-  <!-- Back to top button -->
-  <div class="back-to-top">
-    <i class="fas fa-arrow-up"></i>
+
+  <div class="back-to-top" role="button" aria-label="Volver arriba"><i class="fas fa-arrow-up"></i></div>
+
+  <!-- DRAWER CARRITO -->
+  <div id="cartDrawer" class="cart-drawer" hidden>
+    <div class="cart-backdrop" id="cartBackdrop"></div>
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-bag"></i> Tu carrito</h3>
+        <button class="cart-close" id="cartClose" aria-label="Cerrar carrito"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty" id="cartEmpty">
+          <i class="fas fa-shopping-bag"></i>
+          <p>Tu carrito esta vacio</p>
+          <span>Agrega productos para continuar</span>
+        </div>
+      </div>
+      <div class="cart-footer" id="cartFooter" hidden>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+        <button class="btn btn-black cart-checkout">
+          <i class="fas fa-lock"></i> Proceder al pago
+        </button>
+        <button class="btn btn-outline-black" id="clearCart">Vaciar carrito</button>
+      </div>
+    </div>
   </div>
 
   <!-- Video Modal -->
-  <div id="videoModal" class="video-modal">
+  <div id="videoModal" class="video-modal" role="dialog" aria-modal="true">
     <div class="video-modal-content">
       <div class="video-modal-header">
-        <h3 id="videoModalTitle">Título del Video</h3>
-        <button class="video-modal-close" onclick="cerrarVideoModal()">
+        <h3 id="videoModalTitle">Titulo del Video</h3>
+        <button class="video-modal-close" onclick="cerrarVideoModal()" aria-label="Cerrar">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="video-modal-body">
         <div class="video-container">
-          <iframe id="videoFrame" src="/placeholder.svg" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+          <iframe id="videoFrame" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
     </div>
   </div>
-  
-  <script src="script.js"></script>
+
+  <script src="js/supabase-client.js"></script>
+  <script src="js/slider.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin-modal.js"></script>
 </body>
 </html>
+
+

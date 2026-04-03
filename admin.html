@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <title>Admin — Fútea</title>
+  <link rel="stylesheet" href="admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body class="admin-body">
+
+  <!-- Loader inicial mientras Supabase verifica sesion -->
+  <div id="authLoader" class="auth-loader">
+    <div class="auth-loader-inner">
+      <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Fútea">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+  </div>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div id="loginScreen" class="login-screen" hidden>
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Favela Films">
+        <h1>Favela <span>films</span></h1>
+      </div>
+      <h2 class="login-title">Panel de Administración</h2>
+      <p class="login-subtitle">Ingresa con tu cuenta autorizada</p>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="loginEmail"><i class="fas fa-envelope"></i> Correo electrónico</label>
+          <input type="email" id="loginEmail" placeholder="admin@favelafilms.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword"><i class="fas fa-lock"></i> Contraseña</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="toggle-pass" id="togglePass" aria-label="Ver contraseña">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div id="loginError" class="login-error" hidden></div>
+        <button type="submit" class="btn-login" id="btnLogin">
+          <span id="btnLoginText">Iniciar sesión</span>
+          <i class="fas fa-spinner fa-spin" id="loginSpinner" hidden></i>
+        </button>
+      </form>
+
+      <p class="login-back"><a href="index.html"><i class="fas fa-arrow-left"></i> Volver al sitio</a></p>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN DASHBOARD ===== -->
+  <div id="adminDashboard" class="admin-dashboard" hidden>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Logo" class="sidebar-logo">
+        <div>
+          <span class="sidebar-brand">Favela films</span>
+          <span class="sidebar-role">Administrador</span>
+        </div>
+        <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" data-section="slider">
+          <i class="fas fa-images"></i> Carrusel
+        </button>
+        <button class="sidebar-item" data-section="textos">
+          <i class="fas fa-font"></i> Textos
+        </button>
+        <button class="sidebar-item" data-section="videos">
+          <i class="fas fa-video"></i> Videos
+        </button>
+        <button class="sidebar-item" data-section="productos">
+          <i class="fas fa-shopping-bag"></i> Productos
+        </button>
+        <button class="sidebar-item" data-section="contacto">
+          <i class="fas fa-address-card"></i> Contacto
+        </button>
+        <button class="sidebar-item" data-section="tema">
+          <i class="fas fa-palette"></i> Tema & Logo
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-info">
+          <i class="fas fa-user-circle"></i>
+          <span id="adminUserEmail">—</span>
+        </div>
+        <button class="btn-logout" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <button class="topbar-menu-btn" id="topbarMenuBtn"><i class="fas fa-bars"></i></button>
+        <div class="topbar-title" id="topbarTitle">Carrusel</div>
+        <div class="topbar-actions">
+          <a href="index.html" target="_blank" class="topbar-link"><i class="fas fa-external-link-alt"></i> Ver sitio</a>
+        </div>
+      </header>
+
+      <!-- Toast -->
+      <div id="adminToast" class="admin-toast" role="alert"></div>
+
+      <!-- SECTIONS -->
+      <div class="admin-sections">
+
+        <!-- ===== CARRUSEL ===== -->
+        <section class="admin-section active" id="section-slider">
+          <div class="section-head">
+            <h2><i class="fas fa-images"></i> Carrusel de imágenes</h2>
+            <p>Gestiona las imágenes del slider principal. Sube desde Cloudinary o pega una URL.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Subir nueva imagen</h3>
+            </div>
+            <div class="card-body">
+              <div class="upload-zone" id="uploadZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Arrastra una imagen aquí o haz clic para seleccionar</p>
+                <span>JPG, PNG, WEBP — máx. 10MB</span>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+              </div>
+              <div class="upload-progress" id="uploadProgress" hidden>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <span id="progressText">Subiendo...</span>
+              </div>
+              <div class="divider-or"><span>o pega una URL</span></div>
+              <div class="input-row">
+                <input type="url" id="sliderUrlInput" placeholder="https://res.cloudinary.com/...">
+                <button class="btn-primary" id="btnAddSliderUrl"><i class="fas fa-plus"></i> Añadir</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Imágenes actuales <span class="badge" id="sliderCount">0</span></h3>
+            </div>
+            <div class="card-body">
+              <div class="img-grid" id="sliderImgGrid">
+                <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TEXTOS ===== -->
+        <section class="admin-section" id="section-textos">
+          <div class="section-head">
+            <h2><i class="fas fa-font"></i> Textos del sitio</h2>
+            <p>Edita todos los textos visibles en la web. Los cambios se guardan en Supabase.</p>
+          </div>
+          <div class="card">
+            <div class="card-body fields-grid">
+              <div class="field-group">
+                <label>Subtítulo del hero</label>
+                <input type="text" data-config="hero_subtitle" placeholder="Donde las historias cobran vida...">
+              </div>
+              <div class="field-group">
+                <label>Título sección Videos</label>
+                <input type="text" data-config="section_videos_title" placeholder="Audiovisuales Destacados">
+              </div>
+              <div class="field-group">
+                <label>Título sección Historias</label>
+                <input type="text" data-config="section_historias_title" placeholder="Historias de Éxito">
+              </div>
+              <div class="field-group">
+                <label>Título sección Productos</label>
+                <input type="text" data-config="section_productos_title" placeholder="Nuestra Tienda">
+              </div>
+              <div class="field-group full">
+                <label>Descripción del footer</label>
+                <textarea data-config="footer_desc" rows="3" placeholder="Dedicados a visibilizar el arte..."></textarea>
+              </div>
+              <div class="field-group full">
+                <label>Texto copyright</label>
+                <input type="text" data-config="footer_copy" placeholder="© 2025 Favela films...">
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-primary" id="btnSaveTextos"><i class="fas fa-save"></i> Guardar textos</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== VIDEOS ===== -->
+        <section class="admin-section" id="section-videos">
+          <div class="section-head">
+            <h2><i class="fas fa-video"></i> Videos de YouTube</h2>
+            <p>Añade o elimina videos que aparecen en la sección Audiovisuales.</p>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Añadir video</h3></div>
+            <div class="card-body fields-grid">
+              <div class="field-group">
+                <label>ID de YouTube</label>
+                <input type="text" id="newVideoId" placeholder="ej: KKZSGJvQLnY">
+              </div>
+              <div class="field-group">
+                <label>Título</label>
+                <input type="text" id="newVideoTitle" placeholder="Título del video">
+              </div>
+              <div class="field-group">
+                <label>Duración</label>
+                <input type="text" id="newVideoDuration" placeholder="10:25">
+              </div>
+              <div class="field-group">
+                <label>Visualizaciones</label>
+                <input type="text" id="newVideoViews" placeholder="125K visualizaciones">
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-primary" id="btnAddVideo"><i class="fas fa-plus"></i> Añadir video</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Videos actuales <span class="badge" id="videosCount">0</span></h3></div>
+            <div class="card-body">
+              <div class="data-list" id="videosList">
+                <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PRODUCTOS ===== -->
+        <section class="admin-section" id="section-productos">
+          <div class="section-head">
+            <h2><i class="fas fa-shopping-bag"></i> Productos</h2>
+            <p>Gestiona los productos de la tienda. Las imágenes se suben a Cloudinary.</p>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Añadir producto</h3></div>
+            <div class="card-body">
+              <div class="upload-zone upload-zone-sm" id="productUploadZone">
+                <i class="fas fa-image"></i>
+                <p>Imagen del producto</p>
+                <input type="file" id="productFileInput" accept="image/*" hidden>
+              </div>
+              <div id="productImgPreview" class="img-preview" hidden>
+                <img id="productImgPreviewImg" src="" alt="Preview">
+                <button class="btn-icon-danger" id="clearProductImg"><i class="fas fa-times"></i></button>
+              </div>
+              <div class="fields-grid" style="margin-top:1rem">
+                <div class="field-group">
+                  <label>Nombre del producto</label>
+                  <input type="text" id="newProductName" placeholder="Camiseta Oficial...">
+                </div>
+                <div class="field-group">
+                  <label>Precio</label>
+                  <input type="text" id="newProductPrice" placeholder="$89.99">
+                </div>
+                <div class="field-group">
+                  <label>Badge (opcional)</label>
+                  <input type="text" id="newProductBadge" placeholder="NUEVO">
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-primary" id="btnAddProduct"><i class="fas fa-plus"></i> Añadir producto</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Productos actuales <span class="badge" id="productosCount">0</span></h3></div>
+            <div class="card-body">
+              <div class="data-list" id="productosList">
+                <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== CONTACTO ===== -->
+        <section class="admin-section" id="section-contacto">
+          <div class="section-head">
+            <h2><i class="fas fa-address-card"></i> Información de contacto</h2>
+            <p>Actualiza los datos de contacto y redes sociales del footer.</p>
+          </div>
+          <div class="card">
+            <div class="card-body fields-grid">
+              <div class="field-group">
+                <label><i class="fas fa-map-marker-alt"></i> Dirección</label>
+                <input type="text" data-config="contact_address" placeholder="Cúcuta, Norte de Santander">
+              </div>
+              <div class="field-group">
+                <label><i class="fas fa-phone"></i> Teléfono</label>
+                <input type="text" data-config="contact_phone" placeholder="+57 3115998002">
+              </div>
+              <div class="field-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" data-config="contact_email" placeholder="filmsfavela@gmail.com">
+              </div>
+              <div class="field-group">
+                <label><i class="fab fa-facebook"></i> Facebook URL</label>
+                <input type="url" data-config="social_facebook" placeholder="https://facebook.com/...">
+              </div>
+              <div class="field-group">
+                <label><i class="fab fa-instagram"></i> Instagram URL</label>
+                <input type="url" data-config="social_instagram" placeholder="https://instagram.com/...">
+              </div>
+              <div class="field-group">
+                <label><i class="fab fa-youtube"></i> YouTube URL</label>
+                <input type="url" data-config="social_youtube" placeholder="https://youtube.com/...">
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-primary" id="btnSaveContacto"><i class="fas fa-save"></i> Guardar contacto</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TEMA ===== -->
+        <section class="admin-section" id="section-tema">
+          <div class="section-head">
+            <h2><i class="fas fa-palette"></i> Tema & Logo</h2>
+            <p>Personaliza colores, logo e imagen de fondo del sitio.</p>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Logo del sitio</h3></div>
+            <div class="card-body">
+              <div class="logo-preview-wrap">
+                <img id="logoPreview" src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="Logo actual" class="logo-preview">
+                <div>
+                  <div class="upload-zone upload-zone-sm" id="logoUploadZone">
+                    <i class="fas fa-upload"></i>
+                    <p>Subir nuevo logo</p>
+                    <input type="file" id="logoFileInput" accept="image/*" hidden>
+                  </div>
+                  <div class="divider-or"><span>o URL directa</span></div>
+                  <div class="input-row">
+                    <input type="url" id="logoUrlInput" placeholder="https://res.cloudinary.com/...">
+                    <button class="btn-primary" id="btnSetLogo"><i class="fas fa-check"></i> Aplicar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Colores del tema</h3></div>
+            <div class="card-body fields-grid">
+              <div class="field-group">
+                <label>Color dorado (acento)</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="colorGold" value="#d4af37" data-config="color_gold">
+                  <input type="text" id="colorGoldHex" value="#d4af37" placeholder="#d4af37" maxlength="7">
+                </div>
+              </div>
+              <div class="field-group">
+                <label>Color principal</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="colorBlack" value="#000000" data-config="color_black">
+                  <input type="text" id="colorBlackHex" value="#000000" placeholder="#000000" maxlength="7">
+                </div>
+              </div>
+              <div class="field-group full">
+                <label>Imagen de fondo del body (URL)</label>
+                <input type="url" data-config="body_bg" id="bodyBgInput" placeholder="https://res.cloudinary.com/...">
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-primary" id="btnSaveTema"><i class="fas fa-save"></i> Guardar tema</button>
+              <button class="btn-secondary" id="btnResetTema"><i class="fas fa-undo"></i> Resetear</button>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /admin-sections -->
+    </div><!-- /admin-main -->
+  </div><!-- /adminDashboard -->
+
+  <script src="js/supabase-client.js"></script>
+  <script src="admin/auth.js"></script>
+  <script src="admin/cloudinary.js"></script>
+  <script src="admin/editor.js"></script>
+</body>
+</html>
+
+

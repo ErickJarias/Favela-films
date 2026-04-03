@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mira todos los audiovisuales de Futea: torneos, historias y producciones destacadas de nuestra comunidad.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://tudominio.com/videos.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:site_name" content="Futea">
+  <meta property="og:title" content="Audiovisuales | Futea">
+  <meta property="og:description" content="Torneos, historias y contenido audiovisual de Futea.">
+  <meta property="og:url" content="https://tudominio.com/videos.html">
+  <meta property="og:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Audiovisuales | Futea">
+  <meta name="twitter:description" content="Explora todos los videos de Futea.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <title>Audiovisuales — Fútea</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="pages.css">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="F?tea Logo" class="logo-image">
+          <span class="logo-text"><span class="favela-text" data-text="FUTEA">FÚTEA</span></span>
+        </a>
+        <nav class="desktop-nav">
+          <a href="index.html" class="nav-link">Inicio</a>
+          <a href="videos.html" class="nav-link active">Audiovisuales</a>
+          <a href="index.html#historias" class="nav-link">Historias</a>
+          <a href="productos.html" class="nav-link">Productos</a>
+          <a href="index.html#contacto" class="nav-link">Contacto</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-button" id="searchBtn" aria-label="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          </button>
+          <button class="icon-button admin-lock-button desktop-admin-lock" id="adminLockBtn" aria-label="Administrador">
+            <i class="fas fa-lock"></i>
+          </button>
+          <button class="mobile-menu-button" aria-label="Menú">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-menu">
+      <button class="close-menu"><i class="fas fa-times"></i></button>
+      <nav class="mobile-nav">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="videos.html" class="nav-link active">Audiovisuales</a>
+        <a href="index.html#historias" class="nav-link">Historias</a>
+        <a href="productos.html" class="nav-link">Productos</a>
+        <a href="index.html#contacto" class="nav-link">Contacto</a>
+        <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
+          <i class="fas fa-lock"></i>
+          Panel admin
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MODAL LOGIN -->
+  <div id="adminLoginModal" class="admin-login-modal" role="dialog" aria-modal="true" hidden>
+    <div class="admin-login-backdrop"></div>
+    <div class="admin-login-card">
+      <button class="admin-login-close" id="adminLoginClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+      <div class="admin-login-logo">
+        <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="F?tea">
+        <div><h2>Panel Admin</h2><span>Acceso restringido</span></div>
+      </div>
+      <form id="adminLoginForm" class="admin-login-form">
+        <div class="admin-login-field">
+          <label for="modalEmail"><i class="fas fa-envelope"></i> Correo</label>
+          <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
+        </div>
+        <div class="admin-login-field">
+          <label for="modalPassword"><i class="fas fa-lock"></i> Contraseña</label>
+          <div class="modal-pass-wrap">
+            <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" id="modalTogglePass" aria-label="Ver contraseña"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div id="modalLoginError" class="admin-login-error" hidden></div>
+        <button type="submit" class="admin-login-btn" id="modalLoginBtn">
+          <span id="modalLoginBtnText">Ingresar al panel</span>
+          <i class="fas fa-spinner fa-spin" id="modalLoginSpinner" hidden></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <main>
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="index.html">Inicio</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Audiovisuales</span>
+        </nav>
+        <h1 class="page-hero-title">Audiovisuales</h1>
+        <p class="page-hero-subtitle">Toda nuestra producción audiovisual en un solo lugar</p>
+      </div>
+    </div>
+
+    <!-- FILTROS + BÚSQUEDA -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="page-toolbar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="videoSearch" placeholder="Buscar videos..." autocomplete="off">
+            <button id="clearSearch" hidden aria-label="Limpiar"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="filter-chips" id="filterChips">
+            <button class="chip active" data-filter="all">Todos</button>
+            <button class="chip" data-filter="torneo">Torneos</button>
+            <button class="chip" data-filter="historia">Historias</button>
+            <button class="chip" data-filter="entrenamiento">Entrenamiento</button>
+          </div>
+        </div>
+
+        <!-- Contador -->
+        <p class="results-count" id="resultsCount"></p>
+
+        <!-- Grid de videos -->
+        <div class="video-grid" id="videoGrid">
+          <div class="page-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Cargando videos...</span>
+          </div>
+        </div>
+
+        <!-- Sin resultados -->
+        <div id="noResults" class="no-results" hidden>
+          <i class="fas fa-video-slash"></i>
+          <p>No se encontraron videos con ese criterio.</p>
+          <button class="btn btn-outline-black" id="resetFilters">Ver todos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3 class="footer-title"><span class="favela-text" data-text="FUTEA">FÚTEA</span></h3>
+          <p class="footer-text">Dedicados a visibilizar el arte, el deporte y la cultura a través del audiovisual.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/futealab" target="_blank" rel="noopener" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="https://www.instagram.com/favelafilms_/" target="_blank" rel="noopener" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+            </a>
+            <a href="https://www.youtube.com/@FavelaFilmStudio" target="_blank" rel="noopener" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path><path d="m10 15 5-3-5-3z"></path></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3 class="footer-title">Navegación</h3>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Inicio</a></li>
+            <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
+            <li><a href="productos.html" class="footer-link">Productos</a></li>
+            <li><a href="index.html#contacto" class="footer-link">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3 class="footer-title">Contacto</h3>
+          <ul class="contact-info">
+            <li class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span>Cúcuta, Norte de Santander</span>
+            </li>
+            <li class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              <span>filmsfavela@gmail.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 F?tea. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="back-to-top" role="button" aria-label="Volver arriba"><i class="fas fa-arrow-up"></i></div>
+
+  <!-- Video Modal -->
+  <div id="videoModal" class="video-modal" role="dialog" aria-modal="true">
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h3 id="videoModalTitle">Título del Video</h3>
+        <button class="video-modal-close" onclick="cerrarVideoModal()" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="video-modal-body">
+        <div class="video-container">
+          <iframe id="videoFrame" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/supabase-client.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/admin-modal.js"></script>
+  <script src="js/videos-page.js"></script>
+</body>
+</html>
+
+

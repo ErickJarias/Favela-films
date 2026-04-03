@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descubre la tienda de Futea: productos oficiales, ropa y accesorios con identidad deportiva y cultural.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://tudominio.com/productos.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:site_name" content="Futea">
+  <meta property="og:title" content="Tienda | Futea">
+  <meta property="og:description" content="Compra productos de Futea: ropa y accesorios oficiales.">
+  <meta property="og:url" content="https://tudominio.com/productos.html">
+  <meta property="og:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tienda | Futea">
+  <meta name="twitter:description" content="Explora productos y accesorios oficiales de Futea.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <link rel="icon" type="image/jpeg" href="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg">
+  <title>Tienda — Fútea</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="pages.css">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="F?tea Logo" class="logo-image">
+          <span class="logo-text"><span class="favela-text" data-text="FUTEA">FÚTEA</span></span>
+        </a>
+        <nav class="desktop-nav">
+          <a href="index.html" class="nav-link">Inicio</a>
+          <a href="videos.html" class="nav-link">Audiovisuales</a>
+          <a href="index.html#historias" class="nav-link">Historias</a>
+          <a href="productos.html" class="nav-link active">Productos</a>
+          <a href="index.html#contacto" class="nav-link">Contacto</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-button" id="searchBtn" aria-label="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          </button>
+          <button class="icon-button cart-icon" id="cartBtn" aria-label="Carrito">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+          <button class="icon-button admin-lock-button desktop-admin-lock" id="adminLockBtn" aria-label="Administrador">
+            <i class="fas fa-lock"></i>
+          </button>
+          <button class="mobile-menu-button" aria-label="Menú">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-menu">
+      <button class="close-menu"><i class="fas fa-times"></i></button>
+      <nav class="mobile-nav">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="videos.html" class="nav-link">Audiovisuales</a>
+        <a href="index.html#historias" class="nav-link">Historias</a>
+        <a href="productos.html" class="nav-link active">Productos</a>
+        <a href="index.html#contacto" class="nav-link">Contacto</a>
+        <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
+          <i class="fas fa-lock"></i>
+          Panel admin
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MODAL LOGIN -->
+  <div id="adminLoginModal" class="admin-login-modal" role="dialog" aria-modal="true" hidden>
+    <div class="admin-login-backdrop"></div>
+    <div class="admin-login-card">
+      <button class="admin-login-close" id="adminLoginClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+      <div class="admin-login-logo">
+        <img src="https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg" alt="F?tea">
+        <div><h2>Panel Admin</h2><span>Acceso restringido</span></div>
+      </div>
+      <form id="adminLoginForm" class="admin-login-form">
+        <div class="admin-login-field">
+          <label for="modalEmail"><i class="fas fa-envelope"></i> Correo</label>
+          <input type="email" id="modalEmail" placeholder="admin@futea.com" required autocomplete="email">
+        </div>
+        <div class="admin-login-field">
+          <label for="modalPassword"><i class="fas fa-lock"></i> Contraseña</label>
+          <div class="modal-pass-wrap">
+            <input type="password" id="modalPassword" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" id="modalTogglePass" aria-label="Ver contraseña"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div id="modalLoginError" class="admin-login-error" hidden></div>
+        <button type="submit" class="admin-login-btn" id="modalLoginBtn">
+          <span id="modalLoginBtnText">Ingresar al panel</span>
+          <i class="fas fa-spinner fa-spin" id="modalLoginSpinner" hidden></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- DRAWER CARRITO -->
+  <div id="cartDrawer" class="cart-drawer" hidden>
+    <div class="cart-backdrop" id="cartBackdrop"></div>
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-bag"></i> Tu carrito</h3>
+        <button class="cart-close" id="cartClose" aria-label="Cerrar carrito"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty" id="cartEmpty">
+          <i class="fas fa-shopping-bag"></i>
+          <p>Tu carrito está vacío</p>
+          <span>Agrega productos para continuar</span>
+        </div>
+      </div>
+      <div class="cart-footer" id="cartFooter" hidden>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+        <button class="btn btn-black cart-checkout">
+          <i class="fas fa-lock"></i> Proceder al pago
+        </button>
+        <button class="btn btn-outline-black" id="clearCart">Vaciar carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="index.html">Inicio</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Tienda</span>
+        </nav>
+        <h1 class="page-hero-title">Nuestra Tienda</h1>
+        <p class="page-hero-subtitle">Productos oficiales F?tea — calidad y estilo</p>
+      </div>
+    </div>
+
+    <!-- FILTROS + BÚSQUEDA -->
+    <section class="section bg-white">
+      <div class="container">
+        <div class="page-toolbar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="productSearch" placeholder="Buscar productos..." autocomplete="off">
+            <button id="clearSearch" hidden aria-label="Limpiar"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="filter-chips" id="filterChips">
+            <button class="chip active" data-filter="all">Todos</button>
+            <button class="chip" data-filter="NUEVO">Nuevos</button>
+            <button class="chip" data-filter="ropa">Ropa</button>
+            <button class="chip" data-filter="accesorios">Accesorios</button>
+          </div>
+          <div class="sort-select">
+            <select id="sortSelect" aria-label="Ordenar por">
+              <option value="default">Ordenar por</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+              <option value="name">Nombre A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="results-count" id="resultsCount"></p>
+
+        <!-- Grid de productos -->
+        <div class="product-grid" id="productGrid">
+          <div class="page-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Cargando productos...</span>
+          </div>
+        </div>
+
+        <div id="noResults" class="no-results" hidden>
+          <i class="fas fa-box-open"></i>
+          <p>No se encontraron productos.</p>
+          <button class="btn btn-outline-black" id="resetFilters">Ver todos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3 class="footer-title"><span class="favela-text" data-text="FUTEA">FÚTEA</span></h3>
+          <p class="footer-text">Productos oficiales con identidad propia.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/futealab" target="_blank" rel="noopener" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="https://www.instagram.com/favelafilms_/" target="_blank" rel="noopener" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3 class="footer-title">Navegación</h3>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Inicio</a></li>
+            <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
+            <li><a href="productos.html" class="footer-link">Productos</a></li>
+            <li><a href="index.html#contacto" class="footer-link">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3 class="footer-title">Contacto</h3>
+          <ul class="contact-info">
+            <li class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              <span>filmsfavela@gmail.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 F?tea. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="back-to-top" role="button" aria-label="Volver arriba"><i class="fas fa-arrow-up"></i></div>
+
+  <script src="js/supabase-client.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/admin-modal.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/productos-page.js"></script>
+</body>
+</html>
+
+

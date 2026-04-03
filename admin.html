@@ -121,14 +121,12 @@
         <!-- ===== CARRUSEL ===== -->
         <section class="admin-section active" id="section-slider">
           <div class="section-head">
-            <h2><i class="fas fa-images"></i> Carrusel de imágenes</h2>
-            <p>Gestiona las imágenes del slider principal. Sube desde Cloudinary o pega una URL.</p>
+            <h2><i class="fas fa-images"></i> Gestión de imágenes</h2>
+            <p>Sube imágenes y elige dónde aparecen: en el carrusel principal, en la galería, o en ambos.</p>
           </div>
 
           <div class="card">
-            <div class="card-header">
-              <h3>Subir nueva imagen</h3>
-            </div>
+            <div class="card-header"><h3>Subir nueva imagen</h3></div>
             <div class="card-body">
               <div class="upload-zone" id="uploadZone">
                 <i class="fas fa-cloud-upload-alt"></i>
@@ -145,15 +143,44 @@
                 <input type="url" id="sliderUrlInput" placeholder="https://res.cloudinary.com/...">
                 <button class="btn-primary" id="btnAddSliderUrl"><i class="fas fa-plus"></i> Añadir</button>
               </div>
+              <!-- Destinos al subir — se adaptan según orientación detectada -->
+              <div class="upload-destinations" id="uploadDestinations">
+                <span class="upload-dest-label">Añadir a:</span>
+
+                <!-- Opciones landscape (desktop) -->
+                <label class="dest-toggle" id="destSliderWrap">
+                  <input type="checkbox" id="destSlider" checked>
+                  <span><i class="fas fa-desktop"></i> Carrusel escritorio</span>
+                </label>
+                <label class="dest-toggle">
+                  <input type="checkbox" id="destGallery">
+                  <span><i class="fas fa-images"></i> Galería</span>
+                </label>
+
+                <!-- Opción portrait (móvil) — visible solo si imagen es portrait -->
+                <label class="dest-toggle dest-toggle-mobile" id="destMobileWrap" hidden>
+                  <input type="checkbox" id="destMobile" checked>
+                  <span><i class="fas fa-mobile-alt"></i> Carrusel móvil</span>
+                </label>
+              </div>
+              <div class="upload-orient-badge" id="uploadOrientBadge" hidden>
+                <i id="uploadOrientIcon"></i>
+                <span id="uploadOrientText"></span>
+              </div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <h3>Imágenes actuales <span class="badge" id="sliderCount">0</span></h3>
+              <h3>Todas las imágenes <span class="badge" id="sliderCount">0</span></h3>
+              <div class="card-header-filters">
+                <button class="filter-tab active" data-imgfilter="all">Todas</button>
+                <button class="filter-tab" data-imgfilter="slider"><i class="fas fa-film"></i> Carrusel</button>
+                <button class="filter-tab" data-imgfilter="gallery"><i class="fas fa-images"></i> Galería</button>
+              </div>
             </div>
             <div class="card-body">
-              <div class="img-grid" id="sliderImgGrid">
+              <div class="img-grid-admin" id="sliderImgGrid">
                 <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
               </div>
             </div>

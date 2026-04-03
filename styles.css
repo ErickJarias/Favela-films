@@ -116,7 +116,43 @@ ul { list-style: none; }
   background: var(--color-black);
   color: var(--color-white);
 }
-.close-menu { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+.close-menu {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-black);
+  z-index: 102;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.close-menu:hover { background: var(--color-gray-light); }
+
+/* Botón admin en menú móvil */
+.mobile-admin-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1.5px solid var(--color-black);
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: var(--color-black);
+  font-family: var(--font-sans);
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+}
+.mobile-admin-link:hover { background: var(--color-black); color: var(--color-white); }
 
 /* ===== HERO SLIDER PLANO ===== */
 .hero {
@@ -140,7 +176,7 @@ ul { list-style: none; }
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 0.9s ease-in-out;
@@ -150,6 +186,26 @@ ul { list-style: none; }
 .slide.active {
   opacity: 1;
   z-index: 1;
+}
+
+/* En móvil: hero más alto y posición top para no cortar caras/sujetos */
+@media (max-width: 767px) {
+  .hero {
+    height: 75vh;
+    min-height: 480px;
+    align-items: flex-end;
+    padding-bottom: 3rem;
+  }
+  .slide {
+    background-position: center top;
+  }
+  /* Si la imagen es portrait (url_mobile), centrar */
+  .slide.mobile-portrait {
+    background-position: center center;
+    background-size: cover;
+  }
+  .hero-content { padding-bottom: 0; }
+  .hero-subtitle { font-size: 0.95rem; }
 }
 
 /* Overlay degradado */

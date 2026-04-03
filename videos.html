@@ -55,18 +55,15 @@
         </div>
       </div>
     </div>
-    <div class="mobile-menu">
-      <button class="close-menu"><i class="fas fa-times"></i></button>
+        <div class="mobile-menu">
+      <button class="close-menu" aria-label="Cerrar menu"><i class="fas fa-times"></i></button>
       <nav class="mobile-nav">
-        <a href="index.html" class="nav-link">Inicio</a>
-        <a href="videos.html" class="nav-link active">Audiovisuales</a>
-        <a href="index.html#historias" class="nav-link">Historias</a>
-        <a href="productos.html" class="nav-link">Productos</a>
-        <a href="index.html#contacto" class="nav-link">Contacto</a>
-        <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
-          <i class="fas fa-lock"></i>
-          Panel admin
-        </button>
+        <a href="index.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Inicio</a>
+        <a href="galeria.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Galería</a>
+        <a href="videos.html" class="nav-link active" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Audiovisuales</a>
+        <a href="index.html#historias" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Historias</a>
+        <a href="productos.html" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Productos</a>
+        <a href="index.html#contacto" class="nav-link" onclick="document.querySelector('`.mobile-menu`').classList.remove('active')">Contacto</a>
       </nav>
     </div>
   </header>
@@ -106,9 +103,6 @@
     <div class="page-hero">
       <div class="container">
         <nav class="breadcrumb">
-          <a href="index.html">Inicio</a>
-          <i class="fas fa-chevron-right"></i>
-          <span>Audiovisuales</span>
         </nav>
         <h1 class="page-hero-title">Audiovisuales</h1>
         <p class="page-hero-subtitle">Toda nuestra producción audiovisual en un solo lugar</p>

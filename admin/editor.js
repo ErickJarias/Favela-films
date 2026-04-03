@@ -155,6 +155,8 @@ const Editor = (() => {
   }
 
   // --- SLIDER ---
+  let imgFilter = 'all' // 'all' | 'slider' | 'gallery'
+
   async function loadSlider() {
     const grid = document.getElementById('sliderImgGrid')
     const count = document.getElementById('sliderCount')
@@ -169,17 +171,75 @@ const Editor = (() => {
       count.textContent = data.length
       if (!data.length) { grid.innerHTML = '<p class="empty-state">No hay imágenes. Añade la primera.</p>'; return }
 
-      grid.innerHTML = data.map((img, i) => `
-      <div class="img-card" data-id="${img.id}">
-        <img src="${img.url}" alt="Slide ${i+1}" loading="lazy">
-        <div class="img-card-overlay">
-          <div class="img-card-actions">
-            ${i > 0 ? `<button class="btn-icon" onclick="Editor.moveSlider('${img.id}', -1)" title="Subir"><i class="fas fa-arrow-up"></i></button>` : ''}
-            ${i < data.length-1 ? `<button class="btn-icon" onclick="Editor.moveSlider('${img.id}', 1)" title="Bajar"><i class="fas fa-arrow-down"></i></button>` : ''}
-            <button class="btn-icon btn-icon-danger" onclick="Editor.deleteSlider('${img.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+      // Filtrar según tab activo
+      const visible = data.filter(img => {
+        if (imgFilter === 'slider') return img.in_slider !== false
+        if (imgFilter === 'gallery') return img.in_gallery === true
+        return true
+      })
+
+      if (!visible.length) {
+        grid.innerHTML = '<p class="empty-state">No hay imágenes en esta categoría.</p>'
+        return
+      }
+
+      grid.innerHTML = visible.map((img, i) => `
+      <div class="img-card-admin" data-id="${img.id}">
+        <div class="img-card-thumb">
+          <img src="${img.url}" alt="Imagen ${i+1}" loading="lazy">
+          <div class="img-card-overlay">
+            <div class="img-card-actions">
+              ${i > 0 ? `<button class="btn-icon" onclick="Editor.moveSlider('${img.id}', -1)" title="Subir"><i class="fas fa-arrow-up"></i></button>` : ''}
+              ${i < visible.length-1 ? `<button class="btn-icon" onclick="Editor.moveSlider('${img.id}', 1)" title="Bajar"><i class="fas fa-arrow-down"></i></button>` : ''}
+              <button class="btn-icon btn-icon-danger" onclick="Editor.deleteSlider('${img.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+            </div>
           </div>
         </div>
-        <span class="img-card-num">${i+1}</span>
+        <div class="img-card-footer">
+          <label class="dest-check ${img.in_slider_desktop !== false ? 'active' : ''}" title="Mostrar en carrusel escritorio">
+            <input type="checkbox" ${img.in_slider_desktop !== false ? 'checked' : ''}
+              onchange="Editor.toggleDest('${img.id}', 'in_slider_desktop', this.checked)">
+            <i class="fas fa-desktop"></i> Escritorio
+          </label>
+          <label class="dest-check ${img.in_slider_mobile ? 'active' : ''}" title="Mostrar en carrusel móvil">
+            <input type="checkbox" ${img.in_slider_mobile ? 'checked' : ''}
+              onchange="Editor.toggleDest('${img.id}', 'in_slider_mobile', this.checked)">
+            <i class="fas fa-mobile-alt"></i> Móvil
+          </label>
+          <label class="dest-check ${img.in_gallery ? 'active' : ''}" title="Mostrar en galería">
+            <input type="checkbox" ${img.in_gallery ? 'checked' : ''}
+              onchange="Editor.toggleDest('${img.id}', 'in_gallery', this.checked)">
+            <i class="fas fa-images"></i> Galería
+          </label>
+        </div>
+        <div class="img-card-mobile">
+          <div class="img-card-mobile-header">
+            <span class="img-card-mobile-label">
+              <i class="fas fa-mobile-alt"></i> Versión móvil
+              ${img.url_mobile
+                ? '<i class="fas fa-check-circle"></i>'
+                : '<span style="color:#bbb;font-weight:400">sin imagen</span>'}
+            </span>
+          </div>
+          <div class="img-card-mobile-preview">
+            ${img.url_mobile
+              ? `<img src="${img.url_mobile}" alt="Móvil">`
+              : `<div class="no-mobile-img">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Sube una imagen<br>portrait (9:16)</span>
+                </div>`}
+          </div>
+          <div class="img-card-mobile-actions">
+            <label class="btn-upload-mobile" title="Subir imagen móvil portrait 9:16">
+              <i class="fas fa-upload"></i>
+              ${img.url_mobile ? 'Cambiar' : 'Subir imagen móvil'}
+              <input type="file" accept="image/*" hidden onchange="Editor.uploadMobile('${img.id}', this)">
+            </label>
+            ${img.url_mobile
+              ? `<button class="btn-remove-mobile" onclick="Editor.removeMobile('${img.id}')" title="Quitar imagen móvil"><i class="fas fa-trash"></i></button>`
+              : ''}
+          </div>
+        </div>
       </div>`).join('')
     } catch (e) {
       console.error('Error loadSlider()', e)
@@ -187,7 +247,41 @@ const Editor = (() => {
     }
   }
 
-  async function addSliderImage(url) {
+  async function uploadMobile(id, input) {
+    const file = input.files[0]
+    if (!file) return
+    toast('Subiendo imagen móvil...', 'success')
+    try {
+      const url = await Cloudinary.upload(file, 'futea/mobile', null)
+      const { error } = await _db.from('slider_images').update({ url_mobile: url }).eq('id', id)
+      if (error) { toast('Error al guardar', 'error'); return }
+      toast('Imagen móvil guardada')
+      loadSlider()
+    } catch (e) {
+      toast('Error al subir: ' + e.message, 'error')
+    }
+  }
+
+  async function removeMobile(id) {
+    const { error } = await _db.from('slider_images').update({ url_mobile: '' }).eq('id', id)
+    if (error) { toast('Error al quitar imagen móvil', 'error'); return }
+    toast('Imagen móvil eliminada')
+    loadSlider()
+  }
+
+  async function toggleDest(id, field, value) {
+    const { error } = await _db.from('slider_images').update({ [field]: value }).eq('id', id)
+    if (error) { toast('Error al actualizar', 'error'); return }
+    toast(value ? 'Añadido' : 'Quitado')
+    // Actualizar visual sin recargar todo
+    const card = document.querySelector(`.img-card-admin[data-id="${id}"]`)
+    if (card) {
+      const label = card.querySelector(`input[onchange*="${field}"]`)?.closest('.dest-check')
+      if (label) label.classList.toggle('active', value)
+    }
+  }
+
+  async function addSliderImage(url, inSliderDesktop = true, inGallery = false, urlMobile = '') {
     const normalizedUrl = normalizeImageUrl(url)
     if (!isValidHttpUrl(normalizedUrl)) {
       toast('La URL de imagen no es válida', 'error')
@@ -195,9 +289,24 @@ const Editor = (() => {
     }
     const { data: existing } = await _db.from('slider_images').select('order_index').order('order_index', { ascending: false }).limit(1)
     const nextOrder = existing?.length ? existing[0].order_index + 1 : 0
-    const { error } = await _db.from('slider_images').insert({ url: normalizedUrl, order_index: nextOrder })
+    const inSliderMobile = !!urlMobile
+
+    const { error } = await _db.from('slider_images').insert({
+      url: normalizedUrl,
+      order_index: nextOrder,
+      in_slider: inSliderDesktop,
+      in_slider_desktop: inSliderDesktop,
+      in_slider_mobile: inSliderMobile,
+      in_gallery: inGallery,
+      url_mobile: urlMobile
+    })
     if (error) { toast('Error al guardar imagen', 'error'); return }
-    toast('Imagen añadida al carrusel')
+    const dests = [
+      inSliderDesktop && 'carrusel escritorio',
+      inSliderMobile  && 'carrusel móvil',
+      inGallery       && 'galería'
+    ].filter(Boolean).join(', ')
+    toast(`Imagen añadida${dests ? ` → ${dests}` : ''}`)
     loadSlider()
   }
 
@@ -493,22 +602,124 @@ const Editor = (() => {
       loadSlider() // carga inicial
     }
 
-    // Slider: upload Cloudinary
+    // ── Detectar orientación de imagen ──
+    function detectOrientation(file) {
+      return new Promise(resolve => {
+        const img = new Image()
+        const url = URL.createObjectURL(file)
+        img.onload = () => {
+          const ratio = img.naturalWidth / img.naturalHeight
+          URL.revokeObjectURL(url)
+          // portrait: ratio < 0.8 | landscape: ratio >= 0.8
+          resolve({ isPortrait: ratio < 0.8, ratio, w: img.naturalWidth, h: img.naturalHeight })
+        }
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(null) }
+        img.src = url
+      })
+    }
+
+    function applyAutoOrientation(info) {
+      const badge     = document.getElementById('uploadOrientBadge')
+      const icon      = document.getElementById('uploadOrientIcon')
+      const text      = document.getElementById('uploadOrientText')
+      const mobileWrap = document.getElementById('destMobileWrap')
+      const sliderWrap = document.getElementById('destSliderWrap')
+      const destSlider = document.getElementById('destSlider')
+      const destMobile = document.getElementById('destMobile')
+
+      if (!info) return
+
+      badge.hidden = false
+
+      if (info.isPortrait) {
+        // Portrait → solo mostrar opción móvil
+        if (mobileWrap) mobileWrap.hidden = false
+        if (sliderWrap) sliderWrap.hidden = true
+        if (destSlider) destSlider.checked = false
+        if (destMobile) destMobile.checked = true
+        icon.className = 'fas fa-mobile-alt'
+        icon.style.color = '#6366f1'
+        text.textContent = `Imagen portrait (${info.w}×${info.h}) — ideal para carrusel móvil`
+        badge.className = 'upload-orient-badge badge-mobile'
+      } else {
+        // Landscape → solo mostrar opción escritorio
+        if (mobileWrap) mobileWrap.hidden = true
+        if (sliderWrap) sliderWrap.hidden = false
+        if (destSlider) destSlider.checked = true
+        if (destMobile) destMobile.checked = false
+        icon.className = 'fas fa-desktop'
+        icon.style.color = '#16a34a'
+        text.textContent = `Imagen landscape (${info.w}×${info.h}) — ideal para carrusel escritorio`
+        badge.className = 'upload-orient-badge badge-desktop'
+      }
+    }
+
+    function resetOrientUI() {
+      const badge = document.getElementById('uploadOrientBadge')
+      const mobileWrap = document.getElementById('destMobileWrap')
+      const sliderWrap = document.getElementById('destSliderWrap')
+      const destSlider = document.getElementById('destSlider')
+      const destMobile = document.getElementById('destMobile')
+      if (badge) badge.hidden = true
+      if (mobileWrap) mobileWrap.hidden = true
+      if (sliderWrap) sliderWrap.hidden = false
+      if (destSlider) destSlider.checked = true
+      if (destMobile) destMobile.checked = false
+    }
+
+    // Slider: upload Cloudinary con detección de orientación
     Cloudinary.setupDropZone('uploadZone', 'fileInput', async (file) => {
+      const info = await detectOrientation(file)
+      applyAutoOrientation(info)
+
       try {
-        const url = await Cloudinary.upload(file, 'favelafilms/slider', showProgress)
-        await addSliderImage(url)
+        const folder = info?.isPortrait ? 'futea/mobile' : 'futea/images'
+        const url = await Cloudinary.upload(file, folder, showProgress)
+        showProgress(100) // asegurar que llega al 100%
+        const inDesktop = document.getElementById('destSlider')?.checked ?? true
+        const inGallery = document.getElementById('destGallery')?.checked ?? false
+        const inMobile  = document.getElementById('destMobile')?.checked ?? false
+
+        await addSliderImage(
+          url,
+          inDesktop,
+          inGallery,
+          inMobile ? url : ''
+        )
+        resetOrientUI()
       } catch (e) {
         console.error('Cloudinary slider upload error', e)
+        // Ocultar barra de progreso en caso de error
+        const wrap = document.getElementById('uploadProgress')
+        if (wrap) wrap.hidden = true
         toast('Error al subir imagen: ' + e.message, 'error')
       }
     })
 
-    document.getElementById('btnAddSliderUrl')?.addEventListener('click', () => {
+    document.getElementById('btnAddSliderUrl')?.addEventListener('click', async () => {
       const url = document.getElementById('sliderUrlInput').value.trim()
       if (!url) return
-      addSliderImage(url)
+      const inDesktop = document.getElementById('destSlider')?.checked ?? true
+      const inGallery = document.getElementById('destGallery')?.checked ?? false
+      const inMobile  = document.getElementById('destMobile')?.checked ?? false
+      await addSliderImage(
+        url,
+        inDesktop,
+        inGallery,
+        inMobile ? url : ''
+      )
       document.getElementById('sliderUrlInput').value = ''
+      resetOrientUI()
+    })
+
+    // Filtros de imagen (Todas / Carrusel / Galería)
+    document.querySelectorAll('.filter-tab[data-imgfilter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab[data-imgfilter]').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        imgFilter = btn.dataset.imgfilter
+        loadSlider()
+      })
     })
 
     // Videos
@@ -611,5 +822,5 @@ const Editor = (() => {
     })
   }
 
-  return { init, deleteSlider, moveSlider, deleteVideo, editVideo, deleteProduct, editProduct }
+  return { init, deleteSlider, moveSlider, toggleDest, uploadMobile, removeMobile, deleteVideo, editVideo, deleteProduct, editProduct }
 })()

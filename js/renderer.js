@@ -5,9 +5,45 @@ const Renderer = (() => {
   const DEFAULT_LOGO = 'https://res.cloudinary.com/dbm8zejcu/image/upload/q_auto/f_auto/v1775178865/logo_eg8uop.jpg'
   let videoMeta = {}
 
+  async function fetchSlider() {
+    try {
+      const isMobile = window.innerWidth < 768
+
+      // Traer TODAS las imágenes del slider para poder filtrar por dispositivo
+      const { data, error } = await _db
+        .from('slider_images')
+        .select('*')
+        .order('order_index', { ascending: true })
+
+      if (error) throw error
+      if (!data?.length) return []
+
+      if (isMobile) {
+        // Móvil: imágenes con in_slider_mobile=true
+        // Si no existe la columna nueva, fallback a las que tienen url_mobile
+        const mobileSlides = data.filter(r =>
+          r.in_slider_mobile === true ||
+          (r.in_slider_mobile === undefined && r.url_mobile)
+        )
+        // Si no hay ninguna específica para móvil, usar las de desktop con crop automático
+        return mobileSlides.length ? mobileSlides : data.filter(r =>
+          r.in_slider_desktop !== false && r.in_slider !== false
+        )
+      } else {
+        // Desktop: imágenes con in_slider_desktop=true (o in_slider=true para compatibilidad)
+        return data.filter(r =>
+          r.in_slider_desktop === true ||
+          (r.in_slider_desktop === undefined && r.in_slider !== false)
+        )
+      }
+    } catch (err) {
+      console.error('Error cargando slider', err)
+      return []
+    }
+  }
+
   async function fetchTable(table) {
     try {
-      // site_config usa 'key' como PK, no tiene order_index
       const query = table === 'site_config'
         ? _db.from(table).select('*')
         : _db.from(table).select('*').order('order_index', { ascending: true })
@@ -153,13 +189,22 @@ const Renderer = (() => {
     const [videos, products, sliderRows, configRows] = await Promise.all([
       fetchTable('videos'),
       fetchTable('products'),
-      fetchTable('slider_images'),
+      fetchSlider(),          // ← usa fetchSlider en vez de fetchTable
       fetchTable('site_config')
     ])
 
     const videosData = videos
     const productsData = products
-    const sliderData = sliderRows.map(r => r.url)
+
+    // Mapear slides según dispositivo
+    const isMobile = window.innerWidth < 768
+    const sliderData = sliderRows.map(r => {
+      if (isMobile) {
+        // En móvil: usar url_mobile si existe, si no usar url con crop automático
+        return { url: r.url_mobile || r.url, url_mobile: r.url_mobile || '' }
+      }
+      return { url: r.url, url_mobile: '' }
+    })
     const configData = Object.fromEntries(configRows.map(r => [r.key, r.value]))
     videoMeta = (() => {
       try { return JSON.parse(configData.video_meta || '{}') } catch { return {} }

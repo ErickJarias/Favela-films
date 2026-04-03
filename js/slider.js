@@ -1,35 +1,62 @@
-// ===== SLIDER PLANO (Ken Burns effect) =====
+// ===== SLIDER PLANO — soporte desktop/mobile =====
 const Slider = (() => {
   let current = 0
   let total = 0
   let timer = null
   let paused = false
+  let slidesData = [] // array de { url, url_mobile }
   const INTERVAL = 6000
-  const TRANSITION = 900
+  const MOBILE_BP = 768 // px — breakpoint móvil
 
-  function build(slides) {
+  // Devuelve true si estamos en móvil
+  function isMobile() { return window.innerWidth < MOBILE_BP }
+
+  // Elige la URL correcta para un slide según el viewport
+  // Si no hay url_mobile, usa Cloudinary para hacer crop portrait automático
+  function resolveUrl(slide) {
+    const isMob = isMobile()
+    if (!isMob) return slide.url
+
+    // Tiene URL móvil específica → usarla
+    if (slide.url_mobile) return slide.url_mobile
+
+    // Es URL de Cloudinary → aplicar crop portrait automático
+    if (slide.url && slide.url.includes('cloudinary.com')) {
+      return slide.url.replace('/upload/', '/upload/ar_9:16,c_fill,g_auto,w_600,q_auto,f_auto/')
+    }
+
+    // Fallback: misma imagen
+    return slide.url
+  }
+
+  function build(data) {
     const track = document.getElementById('sliderTrack')
     const dots = document.getElementById('sliderDots')
     const controls = document.querySelector('.slider-controls')
     if (!track) return
 
-    total = slides.length
+    // Normalizar: acepta strings o { url, url_mobile }
+    slidesData = data.map(s => typeof s === 'string' ? { url: s, url_mobile: '' } : s)
+    total = slidesData.length
+
     track.innerHTML = ''
     if (dots) dots.innerHTML = ''
     if (controls) controls.style.display = total ? 'flex' : 'none'
     if (dots) dots.style.display = total ? 'flex' : 'none'
 
     if (!total) {
-      track.innerHTML = `<div class="slide active" style="background: linear-gradient(180deg, #111 0%, #000 100%);"></div>`
+      track.innerHTML = `<div class="slide active" style="background:#111"></div>`
       current = 0
       return
     }
 
-    slides.forEach((src, i) => {
-      const slide = document.createElement('div')
-      slide.className = 'slide' + (i === 0 ? ' active' : '')
-      slide.style.backgroundImage = `url('${src}')`
-      track.appendChild(slide)
+    slidesData.forEach((slide, i) => {
+      const el = document.createElement('div')
+      const hasMobile = isMobile() && slide.url_mobile
+      el.className = 'slide' + (i === 0 ? ' active' : '') + (hasMobile ? ' mobile-portrait' : '')
+      el.style.backgroundImage = `url('${resolveUrl(slide)}')`
+      el.dataset.index = i
+      track.appendChild(el)
 
       if (dots) {
         const dot = document.createElement('button')
@@ -40,6 +67,21 @@ const Slider = (() => {
       }
     })
     current = 0
+  }
+
+  // Actualiza las imágenes cuando cambia el tamaño de pantalla
+  function refreshImages() {
+    const slides = document.querySelectorAll('.slide')
+    slidesData.forEach((slide, i) => {
+      if (!slides[i]) return
+      slides[i].style.backgroundImage = `url('${resolveUrl(slide)}')`
+      // Actualizar clase portrait
+      if (isMobile() && slide.url_mobile) {
+        slides[i].classList.add('mobile-portrait')
+      } else {
+        slides[i].classList.remove('mobile-portrait')
+      }
+    })
   }
 
   function goTo(index) {
@@ -67,8 +109,8 @@ const Slider = (() => {
   function pause() { paused = true; stopAuto() }
   function resume() { paused = false; startAuto() }
 
-  function init(slides) {
-    build(slides)
+  function init(data) {
+    build(data)
 
     const btnNext = document.getElementById('sliderNext')
     const btnPrev = document.getElementById('sliderPrev')
@@ -97,10 +139,17 @@ const Slider = (() => {
       if (Math.abs(diff) > 50) { pause(); diff > 0 ? next() : prev(); setTimeout(resume, 4000) }
     }, { passive: true })
 
+    // Actualizar imágenes al rotar/redimensionar
+    let resizeTimer
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(refreshImages, 200)
+    })
+
     startAuto()
   }
 
-  function rebuild(slides) { stopAuto(); build(slides); startAuto() }
+  function rebuild(data) { stopAuto(); build(data); startAuto() }
 
   return { init, rebuild, next, prev, goTo, pause, resume }
 })()

@@ -64,6 +64,7 @@
         </a>
         <nav class="desktop-nav">
           <a href="#" class="nav-link active">Inicio</a>
+          <a href="galeria.html" class="nav-link">Galería</a>
           <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
           <a href="#historias" class="nav-link">Historias</a>
           <a href="#productos" class="nav-link">Productos</a>
@@ -87,16 +88,16 @@
       </div>
     </div>
     <div class="mobile-menu">
-      <button class="close-menu"><i class="fas fa-times"></i></button>
+      <button class="close-menu" aria-label="Cerrar menu"><i class="fas fa-times"></i></button>
       <nav class="mobile-nav">
-        <a href="#" class="nav-link active">Inicio</a>
-        <a href="#audiovisuales" class="nav-link">Audiovisuales</a>
-        <a href="#historias" class="nav-link">Historias</a>
-        <a href="#productos" class="nav-link">Productos</a>
-        <a href="#contacto" class="nav-link">Contacto</a>
+        <a href="index.html" class="nav-link active" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Inicio</a>
+        <a href="galeria.html" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Galería</a>
+        <a href="#audiovisuales" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Audiovisuales</a>
+        <a href="#historias" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Historias</a>
+        <a href="#productos" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Productos</a>
+        <a href="#contacto" class="nav-link" onclick="document.querySelector('.mobile-menu').classList.remove('active')">Contacto</a>
         <button class="mobile-admin-link" id="adminLockBtnMobile" type="button">
-          <i class="fas fa-lock"></i>
-          Panel admin
+          <i class="fas fa-lock"></i> Panel admin
         </button>
       </nav>
     </div>
@@ -167,6 +168,17 @@
         </button>
       </div>
       <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section class="section bg-gray gallery-preview-section">
+      <div class="container">
+        <div class="gallery-preview-cta">
+          <a href="galeria.html" class="btn btn-black">
+            <i class="fas fa-images"></i> Ver galería completa
+          </a>
+        </div>
+      </div>
     </section>
 
     <!-- VIDEOS -->
@@ -241,6 +253,7 @@
           <h3 class="footer-title">Enlaces Rapidos</h3>
           <ul class="footer-links">
             <li><a href="index.html" class="footer-link">Inicio</a></li>
+            <li><a href="galeria.html" class="footer-link">Galería</a></li>
             <li><a href="videos.html" class="footer-link">Audiovisuales</a></li>
             <li><a href="#historias" class="footer-link">Historias de Exito</a></li>
             <li><a href="productos.html" class="footer-link">Productos</a></li>
